@@ -1,0 +1,37 @@
+# .gitignore
+
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+# ใส่ชื่อโฟลเดอร์ virtualenv ของคุณ
+# จากในรูปของคุณคือ myenv ที่อยู่นอกโฟลเดอร์โปรเจกต์
+# การเขียนแบบนี้จะดักจับโฟลเดอร์ myenv ที่อาจจะถูกสร้างผิดที่ในอนาคตได้ด้วย
+myenv/
+venv/
+env/
+
+# Secrets and Local configuration
+# ไฟล์ที่เก็บข้อมูลสำคัญ ไม่ควร push ขึ้น Git เด็ดขาด!
+.env
+
+# Databases
+# ป้องกันไฟล์ฐานข้อมูลชั่วคราวหรือไฟล์สำรองข้อมูล
+db.sqlite3
+*.sqlite3
+*.sql
+*.dump
+
+# Static and Media files
+# โฟลเดอร์ที่ Django สร้างขึ้นหลังรัน collectstatic หรือเมื่อมีการอัปโหลดไฟล์
+/static/
+/media/
+
+# Editor and OS specific files
+.idea/
+.vscode/
+*.swp
+.DS_Store
