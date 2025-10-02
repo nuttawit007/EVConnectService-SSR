@@ -9,7 +9,7 @@ urlpatterns = [
     # ex: /client/appointment/
     path('appointment/', views.AppointmentView.as_view(), name='appointment'),
     # ex: /client/appointment/1/rating
-    path('appointment/<int:appointment_id>/rating/', views.RatingView.as_view(), name='rating'),
+    path('appointment/<int:appointment_id>/review/', views.ReviewView.as_view(), name='rating'),
     # ex: /client/vehicle/
     path('vehicle/', views.VehicleView.as_view(), name='vehicle'),
     # ex: /client/vehicle/add/

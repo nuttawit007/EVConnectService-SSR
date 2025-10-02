@@ -15,9 +15,9 @@ class AppointmentView(View):
     def get(self, request):
         return render(request, 'appointment.html')
     
-class RatingView(View):
+class ReviewView(View):
     def get(self, request, appointment_id):
-        return render(request, 'rating.html')
+        return render(request, 'review.html')
 
 class VehicleView(View):
     def get(self, request):
@@ -36,6 +36,6 @@ class ProfileView(View):
         return render(request, 'profile.html')
 
 class EditProfileView(View):
-    def get(self, request, user_i):
+    def get(self, request, user_id):
         return render(request, 'edit_profile.html')
     
