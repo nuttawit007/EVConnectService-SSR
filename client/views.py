@@ -14,7 +14,28 @@ class BookView(View):
 class AppointmentView(View):
     def get(self, request):
         return render(request, 'appointment.html')
+    
+class RatingView(View):
+    def get(self, request, appointment_id):
+        return render(request, 'rating.html')
 
 class VehicleView(View):
     def get(self, request):
         return render(request, 'vehicle.html')
+
+class AddVehicleView(View):
+    def get(self, request):
+        return render(request, 'add_vehicle.html')
+
+class EditVehicleView(View):
+    def get(self, request, car_id):
+        return render(request, 'edit_vehicle.html')
+
+class ProfileView(View):
+    def get(self, request):
+        return render(request, 'profile.html')
+
+class EditProfileView(View):
+    def get(self, request, user_i):
+        return render(request, 'edit_profile.html')
+    
