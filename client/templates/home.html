@@ -1,14 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body>
-    <h1 class="text-3xl text-gray-500">
-        Home Page
-    </h1>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero section -->
+<section class="max-w-4xl mx-auto text-center mt-32">
+    <h1 class="text-5xl lg:text-6xl font-bold mb-6">EV Connect Service</h1>
+    <p class="text-lg lg:text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+        EV Connect Service is a smart platform that simplifies EV service bookings and enhances customer experience.
+    </p>
+    <a href="{% url 'book' %}" class="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold rounded-xl text-xl transition-colors">
+        Book an Appointment
+    </a>
+</section>
+
+<!-- Services section -->
+<section class="mt-32">
+    <!-- Service Title -->
+    <div class="text-center mb-12">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Services</h2>
+        <p class="text-lg text-gray-400">All essential EV services in one place, ready to book.</p>
+    </div>
+    <!-- Service list -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
+            <h3 class="text-2xl font-bold mb-4">Maintenance</h3>
+            <p class="text-yellow-400 text-sm leading-relaxed">
+                บริการเช็กระยะ ดูแลรถตามกำหนด<br>เพื่อให้รถทุกคนพร้อมใช้งานเสมอ
+            </p>
+        </div>
+        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
+            <h3 class="text-2xl font-bold mb-4">Repair</h3>
+            <p class="text-yellow-400 text-sm leading-relaxed">
+                ซ่อมแบบมืบมืบทุกรถทุกปัญหาระทุก<br>โดยทีมช่างผู้เชี่ยวชาญ
+            </p>
+        </div>
+        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
+            <h3 class="text-2xl font-bold mb-4">Warranty & Insurance</h3>
+            <p class="text-yellow-400 text-sm leading-relaxed">
+                รองรับงานเคลมตามประกัน<br>และบริการรอบด้านตามกรมธรรม์ที่
+            </p>
+        </div>
+        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
+            <h3 class="text-2xl font-bold mb-4">Other</h3>
+            <p class="text-yellow-400 text-sm leading-relaxed">
+                บริการเสริม เช่น ล้างรถ ดูแลเบื้อต้น<br>อันโดดเด่นพิเศษ และอื่น ๆ
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

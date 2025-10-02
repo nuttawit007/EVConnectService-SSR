@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="text-center mb-5 mt-12">
+    <h1 class="text-4xl font-bold mb-3">Review</h1>
+    <p class="text-slate-400">Evaluate your satisfaction with this service.</p>
+</div>
+
+<!-- Main section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left Column - Appointment Details -->
+    <div class="bg-slate-800 rounded-3xl p-8">
+        <!-- License Plate, Brand, Model Row -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div>
+                <label class="block text-white text-lg mb-2">License plate</label>
+                <input 
+                    type="text" 
+                    value="1 กก 1111" 
+                    readonly
+                    class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed"
+                >
+            </div>
+            <div>
+                <label class="block text-white text-lg mb-2">Brand</label>
+                <input 
+                    type="text" 
+                    value="Tesla" 
+                    readonly
+                    class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed"
+                >
+            </div>
+            <div>
+                <label class="block text-white text-lg mb-2">Model</label>
+                <input 
+                    type="text" 
+                    value="Tesla Model3" 
+                    readonly
+                    class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed"
+                >
+            </div>
+        </div>
+
+        <!-- Service -->
+        <div class="mb-6">
+            <label class="block text-white text-lg mb-2">Service</label>
+            <input 
+                type="text" 
+                value="Maintenance Service" 
+                readonly
+                class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed"
+            >
+        </div>
+
+        <!-- Description -->
+        <div>
+            <label class="block text-white text-lg mb-2">Description</label>
+            <textarea readonly rows="6" class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed resize-none">check 10,000 km</textarea>
+        </div>
+    </div>
+
+    <!-- Right Column - Rating and Comment -->
+    <form id="reviewForm">
+        <div class="flex flex-col gap-4 bg-slate-800 rounded-3xl p-8">
+            <!-- Rating -->
+            <div class="flex-1">
+                <label class="block text-white text-lg mb-6">Rating</label>
+                <div class="flex justify-center gap-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="1" class="hidden peer">
+                        <div class="w-14 h-14 rounded-full bg-slate-600 peer-checked:bg-yellow-400 peer-checked:text-slate-900 flex items-center justify-center text-xl font-semibold transition-all hover:scale-110">
+                            1
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="2" class="hidden peer">
+                        <div class="w-14 h-14 rounded-full bg-slate-600 peer-checked:bg-yellow-400 peer-checked:text-slate-900 flex items-center justify-center text-xl font-semibold transition-all hover:scale-110">
+                            2
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="3" class="hidden peer">
+                        <div class="w-14 h-14 rounded-full bg-slate-600 peer-checked:bg-yellow-400 peer-checked:text-slate-900 flex items-center justify-center text-xl font-semibold transition-all hover:scale-110">
+                            3
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="4" class="hidden peer">
+                        <div class="w-14 h-14 rounded-full bg-slate-600 peer-checked:bg-yellow-400 peer-checked:text-slate-900 flex items-center justify-center text-xl font-semibold transition-all hover:scale-110">
+                            4
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="5" class="hidden peer">
+                        <div class="w-14 h-14 rounded-full bg-slate-600 peer-checked:bg-yellow-400 peer-checked:text-slate-900 flex items-center justify-center text-xl font-semibold transition-all hover:scale-110">
+                            5
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Comment -->
+            <div class="flex-1">
+                <label class="block text-white text-lg mb-2">Comment</label>
+                <textarea 
+                    rows="8"
+                    placeholder="Very good service"
+                    class="w-full h-full px-4 py-3 bg-slate-700 text-white placeholder-gray-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+                >Very good service</textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex-1 flex justify-between gap-4">
+                <button type="button" onclick="window.history.back()"
+                        class="flex-1 px-6 py-3.5 bg-red-400 hover:bg-red-500 text-white rounded-xl font-medium transition-colors text-lg">
+                    cancel
+                </button>
+                <button type="submit" 
+                    class="flex-1 px-6 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 rounded-xl font-medium transition-colors text-lg">
+                    confirm
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

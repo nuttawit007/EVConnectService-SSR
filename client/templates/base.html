@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Connect Service</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .active { background-color: oklch(85.2% 0.199 91.936); color: black;}
+    </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen px-[120px] py-8">
+    <!-- Header -->
+    <header>
+        <nav class="flex items-center justify-between">
+            <!-- logo -->
+            <div class="w-[142px]">
+                <a href="{% url 'home' %}">
+                    <div class="w-14 h-14 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+            <!-- menu bar -->
+            <div class="space-x-6">
+                <a href="{% url 'book' %}" class="{% if request.path == '/client/book/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors">Booking</a>
+                <a href="{% url 'appointment' %}" class="{% if request.path == '/client/appointment/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors">Appointments</a>
+                <a href="{% url 'vehicle' %}" class="{% if request.path == '/client/vehicle/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors ">Vehicles</a>
+            </div>
+            <!-- login button -->
+            <div>
+                <a href="{% url 'profile' %}" class="{% if request.path == '/client/profile/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors ">66070065</a>
+            </div>
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
