@@ -30,7 +30,7 @@ class Car(models.Model):
 
 class ServiceType(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(null=True)
 
     def __str__(self):
         return f"Service name : {self.name}"
@@ -57,7 +57,7 @@ class Appointment(models.Model):
 class Rating(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="rating")
     score = models.IntegerField()
-    comment = models.TextField()
+    comment = models.TextField(null=True)
 
     def __str__(self) -> str:
         return f"Rating id : #{self.pk} - {self.score}"
