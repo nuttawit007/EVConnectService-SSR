@@ -44,7 +44,7 @@ class Appointment(models.Model):
         REJECT = "REJECT"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments")
-    car = models.OneToOneField(Car, on_delete=models.CASCADE, related_name="appointment")
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="appointment")
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
