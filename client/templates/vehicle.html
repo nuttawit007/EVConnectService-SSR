@@ -17,10 +17,11 @@
 
 <!-- Vehicle Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% for vehicle in vehicles %}
         <!-- Vehicle Card 1 -->
         <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
             <div class="flex items-start justify-between mb-8">
-                <h2 class="text-3xl font-bold">1 กก 1111</h2>
+                <h2 class="text-3xl font-bold">{{vehicle.license_plate}}</h2>
                 <div class="flex gap-3">
                     <a  href="{% url 'edit_vehicle' car_id=1 %}">
                         <button class="px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors">
@@ -35,40 +36,13 @@
             <div class="grid grid-cols-2 gap-8">
                 <div>
                     <p class="text-slate-400 mb-2">brand</p>
-                    <p class="text-yellow-400 text-xl font-medium">Tesla</p>
+                    <p class="text-yellow-400 text-xl font-medium">{{vehicle.brand}}</p>
                 </div>
                 <div>
                     <p class="text-slate-400 mb-2">model</p>
-                    <p class="text-yellow-400 text-xl font-medium">Tesla Model 3</p>
+                    <p class="text-yellow-400 text-xl font-medium">{{vehicle.model}}</p>
                 </div>
             </div>
         </div>
-
-        <!-- Vehicle Card 2 -->
-        <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
-            <div class="flex items-start justify-between mb-8">
-                <h2 class="text-3xl font-bold">2 ขข 222</h2>
-                <div class="flex gap-3">
-                    <a href="{% url 'edit_vehicle' car_id=2 %}">
-                        <button class="px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors">
-                            edit
-                        </button>
-                    </a>
-                    <button class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg font-medium transition-colors">
-                        delete
-                    </button>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-8">
-                <div>
-                    <p class="text-slate-400 mb-2">brand</p>
-                    <p class="text-yellow-400 text-xl font-medium">BYD</p>
-                </div>
-                <div>
-                    <p class="text-slate-400 mb-2">model</p>
-                    <p class="text-yellow-400 text-xl font-medium">BYD Atto 3</p>
-                </div>
-            </div>
-        </div>
-        </div>
+    {% endfor %}
 {% endblock %}

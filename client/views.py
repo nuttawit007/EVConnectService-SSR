@@ -38,7 +38,16 @@ class ReviewView(View):
 
 class VehicleView(View):
     def get(self, request):
-        return render(request, 'vehicle.html')
+        query = Car.objects.all()
+        vehicles = []
+        for car in query:
+            vehicles.append({
+            'license_plate' : car.license_plate,
+            'brand' : car.brand,
+            'model' : car.model
+            })
+        print(vehicles)
+        return render(request, 'vehicle.html', {'vehicles' : vehicles})
 
 class AddVehicleView(View):
     def get(self, request):
