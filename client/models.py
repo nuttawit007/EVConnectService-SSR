@@ -52,6 +52,11 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Appointment id : #{self.pk}"
+    
+    def display_date_time(self):
+        date = self.date.strftime("%Y/%m/%d")
+        time = self.time.strftime("%H:%M")
+        return f"{date} - {time}"
 
 
 class Rating(models.Model):

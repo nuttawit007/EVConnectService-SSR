@@ -16,79 +16,53 @@
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Service</th>
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Date & Time</th>
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Status</th>
-                <th class="text-left px-8 py-4 font-medium text-slate-300">Actions</th>
+                <th class="text-left px-8 py-4 font-medium text-slate-300">Review</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Appointment 1 - Pending -->
-            <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                <td class="px-8 py-5 text-white">11 กก 111</td>
-                <td class="px-8 py-5 text-white">Maintenance</td>
-                <td class="px-8 py-5 text-white">2025/10/14 - 10:00</td>
-                <td class="px-8 py-5">
-                    <span class="inline-block px-5 py-1.5 bg-gray-200 border-3 border-gray-600 text-slate-900 rounded-full text-sm font-medium">
-                        pending
-                    </span>
-                </td>
-                <td class="px-8 py-5">
-                    <a href="{% url 'rating' appointment_id=1 %}">
-                        <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors">
-                            review
-                        </button>
-                    </a>
-                </td>
-            </tr>
-
-            <!-- Appointment 2 - In Progress -->
-            <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                <td class="px-8 py-5 text-white">11 กก 111</td>
-                <td class="px-8 py-5 text-white">Repair</td>
-                <td class="px-8 py-5 text-white">2025/10/13 - 8:00</td>
-                <td class="px-8 py-5">
-                    <span class="inline-block px-5 py-1.5 bg-yellow-200 border-3 border-yellow-600 text-slate-900 rounded-full text-sm font-medium">
-                        in-progress
-                    </span>
-                </td>
-                <td class="px-8 py-5">
-                    <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors">
-                        review
-                    </button>
-                </td>
-            </tr>
-
-            <!-- Appointment 3 - Done -->
-            <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                <td class="px-8 py-5 text-white">11 กก 111</td>
-                <td class="px-8 py-5 text-white">Insurance</td>
-                <td class="px-8 py-5 text-white">2025/10/12 - 9:00</td>
-                <td class="px-8 py-5">
-                    <span class="inline-block px-5 py-1.5 bg-green-200 border-3 border-green-600 text-slate-900 rounded-full text-sm font-medium">
-                        done
-                    </span>
-                </td>
-                <td class="px-8 py-5">
-                    <button class="px-6 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-full font-medium transition-colors">
-                        5 point
-                    </button>
-                </td>
-            </tr>
-
-            <!-- Appointment 4 - Rejected -->
-            <tr class="hover:bg-slate-800/30 transition-colors">
-                <td class="px-8 py-5 text-red-400">11 กก 111</td>
-                <td class="px-8 py-5 text-red-400">Other service</td>
-                <td class="px-8 py-5 text-red-400">2025/10/11 - 17:00</td>
-                <td class="px-8 py-5">
-                    <span class="inline-block px-5 py-1.5 bg-red-200 border-3 border-red-600 text-slate-900 rounded-full text-sm font-medium">
-                        reject
-                    </span>
-                </td>
-                <td class="px-8 py-5">
-                    <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors">
-                        review
-                    </button>
-                </td>
-            </tr>
+            {% for ap in appointments %}
+                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors {% if ap.status|upper == 'REJECT' %} text-red-400 {% else %} text-white {% endif %}">
+                    <td class="px-8 py-5">{{ap.license_plate}}</td>
+                    <td class="px-8 py-5">{{ap.service}}</td>
+                    <td class="px-8 py-5">{{ap.date_time}}</td>
+                    <td class="px-8 py-5">
+                        {% if ap.status|upper == 'PENDING'%}
+                            <span class="inline-block px-5 py-1.5 bg-gray-200 border-3 border-gray-600 rounded-full text-sm font-medium text-slate-900 ">
+                                {{ap.status}}
+                            </span>
+                        {% elif ap.status|upper == 'IN-PROGRESS' %}
+                            <span class="inline-block px-5 py-1.5 bg-yellow-200 border-3 border-yellow-600 text-slate-900 rounded-full text-sm font-medium">
+                                {{ap.status}}
+                            </span>
+                        {% elif ap.status|upper == 'DONE' %}
+                            <span class="inline-block px-5 py-1.5 bg-green-200 border-3 border-green-600 text-slate-900 rounded-full text-sm font-medium">
+                                {{ap.status}}
+                            </span>
+                        {% elif ap.status|upper == 'REJECT' %}
+                            <span class="inline-block px-5 py-1.5 bg-red-200 border-3 border-red-600 text-slate-900 rounded-full text-sm font-medium">
+                                {{ap.status}}
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-8 py-5">
+                        {% if ap.status|upper == 'DONE' and ap.rating != None %}
+                        <a href="{% url 'rating' appointment_id=1 %}">
+                            <button class="px-6 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-full font-medium transition-colors">
+                                {{ap.rating}} point
+                            </button>
+                        </a>
+                        {% elif ap.status|upper == 'DONE' and ap.rating == None %}
+                            <a href="{% url 'rating' appointment_id=1 %}">
+                                <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors">
+                                    review
+                                </button>
+                            </a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
