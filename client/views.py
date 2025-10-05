@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from client.models import *
+
+from client.forms import VehicleForm
 
 # Create your views here.
 
@@ -51,7 +53,15 @@ class VehicleView(View):
 
 class AddVehicleView(View):
     def get(self, request):
-        return render(request, 'add_vehicle.html')
+        form = VehicleForm()
+        return render(request, 'add_vehicle.html', {'form' : form})
+    
+    def post(self, request):
+        form = VehicleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('vehicle')
+        return render(request, 'add_vehicle.html', {'form' : form})
 
 class EditVehicleView(View):
     def get(self, request, car_id):

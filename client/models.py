@@ -19,7 +19,7 @@ class User(models.Model):
 
 
 class Car(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cars")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cars", default=1)
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     license_plate = models.CharField(max_length=50, unique=True)

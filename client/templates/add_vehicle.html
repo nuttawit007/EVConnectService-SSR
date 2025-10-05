@@ -8,64 +8,48 @@
 </div>
 
 <!-- Add vehicle form -->
-<form id="addVehicleForm">
+<form method="POST" action="{% url 'add_vehicle' %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
     <div class="bg-slate-800 rounded-3xl p-10 mx-44">
         <!-- License Plate -->
         <div class="mb-8">
-            <label for="licensePlate" class="block text-white text-lg font-medium mb-3">
-                License plate
-            </label>
-            <input 
-                type="text" 
-                id="licensePlate" 
-                name="licensePlate"
-                placeholder="enter your license plate"
-                class="w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
-                required
-            >
+            <label for="{{ form.license_plate.id_for_label }}" class="block text-white text-lg font-medium mb-3">{{ form.license_plate.label }}</label>
+            {{ form.license_plate }}
+            <div class="text-red-400 text-sm mt-2">
+                {{ form.license_plate.errors }}
+            </div>
         </div>
 
         <!-- Brand -->
         <div class="mb-8">
-            <label for="brand" class="block text-white text-lg font-medium mb-3">
-                Brand
-            </label>
-            <input 
-                type="text" 
-                id="brand" 
-                name="brand"
-                placeholder="enter your brand name"
-                class="w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
-                required
-            >
+            <label for="{{ form.brand.id_for_label }}" class="block text-white text-lg font-medium mb-3">{{ form.brand.label }}</label>
+            {{ form.brand }}
+            <div class="text-red-400 text-sm mt-2">
+                {{ form.brand.errors }}
+            </div>
         </div>
 
         <!-- Model -->
         <div class="mb-10">
-            <label for="model" class="block text-white text-lg font-medium mb-3">
-                Model
-            </label>
-            <input 
-                type="text" 
-                id="model" 
-                name="model"
-                placeholder="enter your model name"
-                class="w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
-                required
-            >
+            <label for="{{ form.model.id_for_label }}" class="block text-white text-lg font-medium mb-3">{{ form.model.label }}</label>
+            {{ form.model }}
+            <div class="text-red-400 text-sm mt-2">
+                {{ form.model.errors }}
+            </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="flex justify-end gap-4">
             <a href="{% url 'vehicle' %}">
-                <button type="button" onclick="window.location.href='vehicles.html'"
-                    class="flex-1 px-8 py-4 bg-red-400 hover:bg-red-500 text-white font-medium rounded-2xl transition-colors">
+                <button type="button"
+                    class="flex-1 px-8 py-4 bg-red-400 hover:bg-red-500 text-white font-medium rounded-2xl transition-colors cursor-pointer">
                     cancel
                 </button>
             </a>
             <a href="{% url 'vehicle' %}">
                 <button type="submit"
-                    class="flex-1 px-8 py-4 bg-green-500 hover:bg-green-600 text-slate-900 font-medium rounded-2xl transition-colors">
+                    class="flex-1 px-8 py-4 bg-green-500 hover:bg-green-600 text-slate-900 font-medium rounded-2xl transition-colors cursor-pointer">
                     confirm
                 </button>
             </a>
