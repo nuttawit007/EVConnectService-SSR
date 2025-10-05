@@ -40,8 +40,11 @@ class VehicleForm(ModelForm):
                 "Invalid license plate format."
             )
 
-        # Check for duplicate license plate (case-insensitive)
-        if Car.objects.filter(license_plate__iexact=license_plate).exists():
+        # ตรวจสอบทะเบียนซ้ำ (ยกเว้นทะเบียนของ instance เดิม)
+        qs = Car.objects.filter(license_plate__iexact=license_plate)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
             raise ValidationError("This license plate already exists.")
 
         return license_plate
