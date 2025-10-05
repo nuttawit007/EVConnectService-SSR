@@ -77,6 +77,12 @@ class EditVehicleView(View):
             form.save()
             return redirect('vehicle')
         return render(request, 'edit_vehicle.html', {'form': form, 'car_id': car_id})
+    
+class DeleteVehicleView(View):
+    def post(self, request, car_id):
+        vehicle = Car.objects.get(pk=car_id)
+        vehicle.delete()
+        return redirect('vehicle')
 
 class ProfileView(View):
     def get(self, request):
