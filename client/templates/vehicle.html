@@ -23,7 +23,7 @@
             <div class="flex items-start justify-between mb-8">
                 <h2 class="text-3xl font-bold">{{vehicle.license_plate}}</h2>
                 <div class="flex gap-3">
-                    <a  href="{% url 'edit_vehicle' car_id=1 %}">
+                    <a  href="{% url 'edit_vehicle' vehicle.id %}">
                         <button class="px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors">
                             edit
                         </button>

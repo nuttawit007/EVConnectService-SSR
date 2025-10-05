@@ -40,10 +40,11 @@ class ReviewView(View):
 
 class VehicleView(View):
     def get(self, request):
-        query = Car.objects.all()
+        query = Car.objects.all().order_by('id')
         vehicles = []
         for car in query:
             vehicles.append({
+            'id' : car.id,
             'license_plate' : car.license_plate,
             'brand' : car.brand,
             'model' : car.model
@@ -65,7 +66,17 @@ class AddVehicleView(View):
 
 class EditVehicleView(View):
     def get(self, request, car_id):
-        return render(request, 'edit_vehicle.html')
+        vehicle = Car.objects.get(pk=car_id)
+        form = VehicleForm(instance=vehicle)
+        return render(request, 'edit_vehicle.html', {'form': form, 'car_id': car_id})
+
+    def post(self, request, car_id):
+        vehicle = Car.objects.get(pk=car_id)
+        form = VehicleForm(request.POST, instance=vehicle)
+        if form.is_valid():
+            form.save()
+            return redirect('vehicle')
+        return render(request, 'edit_vehicle.html', {'form': form, 'car_id': car_id})
 
 class ProfileView(View):
     def get(self, request):
