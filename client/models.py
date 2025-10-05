@@ -43,19 +43,19 @@ class Appointment(models.Model):
         DONE = "DONE"
         REJECT = "REJECT"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments", default=1)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="appointment")
-    description = models.TextField(null=True)
-    date = models.DateField(auto_now_add=True)
-    time = models.TimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    description = models.TextField(blank=True, null=True)
+    date = models.DateField()
+    time = models.TimeField()
+    status = models.CharField(max_length=20, choices=Status.choices, default='PENDING')
     service_types = models.ManyToManyField(ServiceType, related_name='services')
 
     def __str__(self):
         return f"Appointment id : #{self.pk}"
     
     def display_date_time(self):
-        date = self.date.strftime("%Y/%m/%d")
+        date = self.date.strftime("%d/%m/%Y")
         time = self.time.strftime("%H:%M")
         return f"{date} - {time}"
 
