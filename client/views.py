@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from client.models import *
 
-from client.forms import VehicleForm
+from client.forms import VehicleForm, BookingForm
 
 # Create your views here.
 
@@ -12,11 +12,49 @@ class HomeView(View):
     
 class BookView(View):
     def get(self, request):
-        return render(request, 'book.html')
+        form = BookingForm()
+        times_morning = ["8:00", "9:00", "10:00", "11:00"]
+        times_afternoon = ["14:00", "15:00", "16:00", "17:00"]
+        # ดึง slot ที่ถูกจองแล้วทั้งหมด
+        booked_slots = list(Appointment.objects.values_list('date', 'time'))
+        # แปลงเป็น string เพื่อใช้ใน JS
+        booked_slots_str = [
+            f"{date.strftime('%Y-%m-%d')}_{time.strftime('%-H:%M')}" for date, time in booked_slots
+        ]
+        return render(request, 'book.html', {
+            'form': form,
+            'times_morning': times_morning,
+            'times_afternoon': times_afternoon,
+            'booked_slots': booked_slots_str if booked_slots_str else [],
+        })
+
+    def post(self, request):
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.user_id = 1
+            appointment.save()
+            form.instance = appointment  # สำคัญ! ให้ฟอร์มรู้ว่า instance ที่ save คือ appointment นี้
+            form.save_m2m()              # บันทึก ManyToMany ลง client_appointment_service_types
+            return redirect('appointment')
+        times_morning = ["8:00", "9:00", "10:00", "11:00"]
+        times_afternoon = ["14:00", "15:00", "16:00", "17:00"]
+        # ดึง slot ที่ถูกจองแล้วทั้งหมด
+        booked_slots = list(Appointment.objects.values_list('date', 'time'))
+        # แปลงเป็น string เพื่อใช้ใน JS
+        booked_slots_str = [
+            f"{date.strftime('%Y-%m-%d')}_{time.strftime('%-H:%M')}" for date, time in booked_slots
+        ]
+        return render(request, 'book.html', {
+            'form': form,
+            'times_morning': times_morning,
+            'times_afternoon': times_afternoon,
+            'booked_slots': booked_slots_str if booked_slots_str else [],
+        })
 
 class AppointmentView(View):
     def get(self, request):
-        query = Appointment.objects.all().order_by('date', 'time')
+        query = Appointment.objects.all().order_by('-id')
         appointments = []
         for ap in query:
             service = " , ".join(ap.service_types.values_list('name', flat=True))
