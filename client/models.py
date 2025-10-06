@@ -63,7 +63,7 @@ class Appointment(models.Model):
 class Rating(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="rating")
     score = models.IntegerField()
-    comment = models.TextField(null=True)
+    comment = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
         return f"Rating id : #{self.pk} - {self.score}"
