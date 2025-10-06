@@ -66,3 +66,17 @@ class BookingForm(ModelForm):
             'date': forms.DateInput(attrs={**base_attrs, 'type': 'date'}),
             'time': forms.TimeInput(attrs={**base_attrs, 'type': 'time'}),
         }
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Rating
+        fields = ["score", "comment"]
+
+        base_attrs = {
+            'class': 'w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all',
+        }
+
+        widgets = {
+            'score': forms.NumberInput(attrs={**base_attrs, 'placeholder': 'enter score (1-5)', 'min': 1, 'max': 5}),
+            'comment': forms.Textarea(attrs={**base_attrs, 'placeholder': 'enter comment (optional)', 'rows': 4}),
+        }

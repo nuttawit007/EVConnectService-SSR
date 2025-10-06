@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from client.models import *
 
-from client.forms import VehicleForm, BookingForm
+from client.forms import VehicleForm, BookingForm, ReviewForm
 
 # Create your views here.
 
@@ -71,10 +71,32 @@ class AppointmentView(View):
             })
         print(appointments)
         return render(request, 'appointment.html', {'appointments' : appointments})
-    
+
 class ReviewView(View):
     def get(self, request, appointment_id):
-        return render(request, 'review.html')
+        form = ReviewForm()
+        appointment = Appointment.objects.get(pk=appointment_id)
+        score = ['1', '2', '3', '4', '5']
+        return render(request, 'review.html', {
+            'form': form,
+            'appointment': appointment, 
+            'score': score
+        })
+    
+    def post(self, request, appointment_id):
+        form = ReviewForm(request.POST)
+        score = ['1', '2', '3', '4', '5']
+        appointment = Appointment.objects.get(pk=appointment_id)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.appointment = appointment
+            review.save()
+            return redirect('appointment')
+        return render(request, 'review.html', {
+            'form': form,
+            'appointment': appointment,
+            'score': score
+        })
 
 class VehicleView(View):
     def get(self, request):
@@ -129,4 +151,4 @@ class ProfileView(View):
 class EditProfileView(View):
     def get(self, request, user_id):
         return render(request, 'edit_profile.html')
-    
+

@@ -46,14 +46,14 @@
                     </td>
                     <td class="px-8 py-5">
                         {% if ap.status|upper == 'DONE' and ap.rating != None %}
-                        <a href="{% url 'rating' appointment_id=1 %}">
+                        <a>
                             <button class="px-6 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-full font-medium transition-colors">
                                 {{ap.rating}} point
                             </button>
                         </a>
                         {% elif ap.status|upper == 'DONE' and ap.rating == None %}
-                            <a href="{% url 'rating' appointment_id=1 %}">
-                                <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors">
+                            <a href="{% url 'review' appointment_id=ap.id %}">
+                                <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors cursor-pointer">
                                     review
                                 </button>
                             </a>
