@@ -58,16 +58,16 @@ class AppointmentView(View):
         appointments = []
         for ap in query:
             service = " , ".join(ap.service_types.values_list('name', flat=True))
-            rating = Rating.objects.filter(appointment=ap).first()
-            rating = rating.score if rating else None
+            review = Review.objects.filter(appointment=ap).first()
+            review_score = review.score if review else None
 
             appointments.append({
                 "id": ap.id,
-                "license_plate": ap.car.license_plate if ap.car_id else None,
+                "license_plate": ap.vehicle.license_plate if ap.vehicle_id else None,
                 "service": service,
                 "date_time": ap.display_date_time(),
                 "status": ap.status,
-                "rating": rating
+                "review_score": review_score,
             })
         print(appointments)
         return render(request, 'appointment.html', {'appointments' : appointments})
@@ -100,14 +100,14 @@ class ReviewView(View):
 
 class VehicleView(View):
     def get(self, request):
-        query = Car.objects.all().order_by('id')
+        query = Vehicle.objects.all().order_by('id')
         vehicles = []
-        for car in query:
+        for vehicle in query:
             vehicles.append({
-            'id' : car.id,
-            'license_plate' : car.license_plate,
-            'brand' : car.brand,
-            'model' : car.model
+            'id' : vehicle.id,
+            'license_plate' : vehicle.license_plate,
+            'brand' : vehicle.brand,
+            'model' : vehicle.model
             })
         print(vehicles)
         return render(request, 'vehicle.html', {'vehicles' : vehicles})
@@ -125,22 +125,22 @@ class AddVehicleView(View):
         return render(request, 'add_vehicle.html', {'form' : form})
 
 class EditVehicleView(View):
-    def get(self, request, car_id):
-        vehicle = Car.objects.get(pk=car_id)
+    def get(self, request, vehicle_id):
+        vehicle = Vehicle.objects.get(pk=vehicle_id)
         form = VehicleForm(instance=vehicle)
-        return render(request, 'edit_vehicle.html', {'form': form, 'car_id': car_id})
+        return render(request, 'edit_vehicle.html', {'form': form, 'vehicle_id': vehicle_id})
 
-    def post(self, request, car_id):
-        vehicle = Car.objects.get(pk=car_id)
+    def post(self, request, vehicle_id):
+        vehicle = Vehicle.objects.get(pk=vehicle_id)
         form = VehicleForm(request.POST, instance=vehicle)
         if form.is_valid():
             form.save()
             return redirect('vehicle')
-        return render(request, 'edit_vehicle.html', {'form': form, 'car_id': car_id})
+        return render(request, 'edit_vehicle.html', {'form': form, 'vehicle_id': vehicle_id})
     
 class DeleteVehicleView(View):
-    def post(self, request, car_id):
-        vehicle = Car.objects.get(pk=car_id)
+    def post(self, request, vehicle_id):
+        vehicle = Vehicle.objects.get(pk=vehicle_id)
         vehicle.delete()
         return redirect('vehicle')
 
@@ -151,4 +151,3 @@ class ProfileView(View):
 class EditProfileView(View):
     def get(self, request, user_id):
         return render(request, 'edit_profile.html')
-

@@ -17,7 +17,7 @@
                 <label class="block text-white text-lg mb-2">License plate</label>
                 <input 
                     type="text" 
-                    value="{{ appointment.car.license_plate }}" 
+                    value="{{ appointment.vehicle.license_plate }}" 
                     readonly
                     class="w-full px-4 py-3 bg-slate-700 text-gray-400 rounded-xl focus:outline-none cursor-not-allowed"
                 >
@@ -60,13 +60,13 @@
         </div>
     </div>
 
-    <!-- Right Column - Rating and Comment -->
+    <!-- Right Column - Review and Comment -->
     <form method="POST" action="{% url 'review' appointment_id=appointment.id %}">
         {% csrf_token %}
         <div class="flex flex-col gap-4 bg-slate-800 rounded-3xl p-8">
-            <!-- Rating -->
+            <!-- Review Score -->
             <div class="flex-1">
-                <label class="block text-white text-lg mb-6">Rating</label>
+                <label class="block text-white text-lg mb-6">Review Score</label>
                 <div class="flex justify-center gap-4">
                     {% for i in score %}
                     <label class="cursor-pointer">

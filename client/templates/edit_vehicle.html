@@ -4,11 +4,11 @@
 <!-- Page Title -->
 <div class="text-center mb-12 mt-12">
     <h1 class="text-4xl font-bold mb-3">Edit Vehicle</h1>
-    <p class="text-slate-400">All your EV cars available</p>
+    <p class="text-slate-400">All your EV vehicles available</p>
 </div>
 
 <!-- Edit vehicle form -->
-<form method="POST" action="{% url 'edit_vehicle' car_id=car_id %}">
+<form method="POST" action="{% url 'edit_vehicle' vehicle_id=vehicle_id %}">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="bg-slate-800 rounded-3xl p-10 mx-44">

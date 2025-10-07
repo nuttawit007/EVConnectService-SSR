@@ -1,69 +1,69 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
-class User(models.Model):
-    class Role(models.Choices):
-        CUSTOMER = "CUSTOMER"
-        STAFF = "STAFF"
-    username = models.CharField(max_length=225, unique=True)
-    password = models.CharField(max_length=225)
-    fname = models.CharField(max_length=225)
-    lname = models.CharField(max_length=225)
-    email = models.EmailField(unique=True)
+class Profile(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     phone_number = models.CharField(max_length=15, unique=True)
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.CUSTOMER)
 
     def __str__(self):
-        return f"User : {self.username} ({self.role})"
+        return f"User : {self.user.username}"
 
 
-class Car(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cars", default=1)
+class Vehicle(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="vehicles",
+        default=1,
+    )
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     license_plate = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return f"Car : {self.brand} {self.model} ({self.license_plate})"
-
+        return f"Vehicle : {self.brand} {self.model} ({self.license_plate})"
 
 class ServiceType(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Service name : {self.name}"
 
 
 class Appointment(models.Model):
-    class Status(models.Choices):
-        PENDING = "PENDING"
-        IN_PROGRESS = "IN-PROGRESS"
-        DONE = "DONE"
-        REJECT = "REJECT"
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        IN_PROGRESS = "IN-PROGRESS", "In progress"
+        DONE = "DONE", "Done"
+        REJECT = "REJECT", "Reject"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments", default=1)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="appointment")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments")
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="appointments", default=1)
     description = models.TextField(blank=True, null=True)
     date = models.DateField()
     time = models.TimeField()
-    status = models.CharField(max_length=20, choices=Status.choices, default='PENDING')
-    service_types = models.ManyToManyField(ServiceType, related_name='services')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    service_types = models.ManyToManyField(ServiceType, related_name="services")
 
     def __str__(self):
         return f"Appointment id : #{self.pk}"
-    
+
     def display_date_time(self):
         date = self.date.strftime("%d/%m/%Y")
         time = self.time.strftime("%H:%M")
         return f"{date} - {time}"
 
 
-class Rating(models.Model):
-    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="rating")
-    score = models.IntegerField()
+class Review(models.Model):
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="review")
+    score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
     comment = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"Rating id : #{self.pk} - {self.score}"
+        return f"Review id : #{self.pk} - {self.score}"
