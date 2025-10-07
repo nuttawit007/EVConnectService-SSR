@@ -15,9 +15,9 @@ urlpatterns = [
     # ex: /client/vehicle/add/
     path('vehicle/add', views.AddVehicleView.as_view(), name='add_vehicle'),
     # ex: /client/vehicle/1/edit
-    path('vehicle/<int:car_id>/edit/', views.EditVehicleView.as_view(), name='edit_vehicle'),
+    path('vehicle/<int:vehicle_id>/edit/', views.EditVehicleView.as_view(), name='edit_vehicle'),
     # ex: /client/vehicle/1/delete
-    path('vehicle/<int:car_id>/delete/', views.DeleteVehicleView.as_view(), name='delete_vehicle'),
+    path('vehicle/<int:vehicle_id>/delete/', views.DeleteVehicleView.as_view(), name='delete_vehicle'),
     # ex: /client/profile/
     path('profile/', views.ProfileView.as_view(), name='profile'),
     # ex: /client/profile/1/edit

@@ -10,7 +10,7 @@ import re
 
 class VehicleForm(ModelForm):
     class Meta:
-        model = Car
+        model = Vehicle
         fields = ["license_plate", "brand", "model"]
 
         base_attrs = {
@@ -41,7 +41,7 @@ class VehicleForm(ModelForm):
             )
 
         # ตรวจสอบทะเบียนซ้ำ (ยกเว้นทะเบียนของ instance เดิม)
-        qs = Car.objects.filter(license_plate__iexact=license_plate)
+        qs = Vehicle.objects.filter(license_plate__iexact=license_plate)
         if self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
@@ -53,14 +53,14 @@ class VehicleForm(ModelForm):
 class BookingForm(ModelForm):
     class Meta:
         model = Appointment
-        fields = ["car", "service_types", "description", "date", "time"]
+        fields = ["vehicle", "service_types", "description", "date", "time"]
 
         base_attrs = {
             'class': 'w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all',
         }
 
         widgets = {
-            'car': forms.Select(attrs={**base_attrs}),
+            'vehicle': forms.Select(attrs={**base_attrs}),
             'service_types': forms.SelectMultiple(attrs={**base_attrs, 'size': 5}),
             'description': forms.Textarea(attrs={**base_attrs, 'placeholder': 'enter description (optional)', 'rows': 4}),
             'date': forms.DateInput(attrs={**base_attrs, 'type': 'date'}),
@@ -69,7 +69,7 @@ class BookingForm(ModelForm):
 
 class ReviewForm(ModelForm):
     class Meta:
-        model = Rating
+        model = Review
         fields = ["score", "comment"]
 
         base_attrs = {
