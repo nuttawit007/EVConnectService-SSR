@@ -77,13 +77,14 @@
                     class="w-full px-6 py-4 bg-slate-700 text-slate-400 rounded-xl focus:outline-none cursor-not-allowed">
             </div>
         </div>
-
-        <button 
-            type="button"
-            onclick="handleLogout()"
-            class="w-full py-4 bg-red-400 hover:bg-red-500 text-white font-medium rounded-xl transition-colors">
-            logout
-        </button>
+        <a href="{% url 'logout' %}">
+            <button 
+                type="button"
+                onclick="handleLogout()"
+                class="w-full py-4 bg-red-400 hover:bg-red-500 text-white font-medium rounded-xl transition-colors">
+                logout
+            </button>
+        </a>
     </div>
 </form>
 {% endblock %}
