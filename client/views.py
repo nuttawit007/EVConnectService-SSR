@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from client.models import *
+
+from core.models import Appointment, Review, Vehicle
 
 from client.forms import VehicleForm, BookingForm, ReviewForm
 

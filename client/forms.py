@@ -1,12 +1,10 @@
 from django import forms
 from django.forms import ModelForm
-from client.models import *
-
-# handle Validation error
 from django.core.exceptions import ValidationError
 
-# regular expression
-import re 
+import re
+
+from core.models import Appointment, Review, Vehicle
 
 class VehicleForm(ModelForm):
     class Meta:
