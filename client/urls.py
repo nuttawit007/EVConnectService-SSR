@@ -20,6 +20,8 @@ urlpatterns = [
     path('vehicle/<int:vehicle_id>/delete/', views.DeleteVehicleView.as_view(), name='delete_vehicle'),
     # ex: /client/profile/
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    # ex: /client/profile/1/edit
-    path('profile/<int:user_id>/edit/', views.EditProfileView.as_view(), name='edit_profile'),
+    # ex: /client/profile/edit
+    path('profile/edit/', views.EditProfileView.as_view(), name='edit_profile'),
+    # ex: /client/profile/change_password/
+    path('profile/change_password/', views.PasswordChangeView.as_view(), name='change_password'),
 ]

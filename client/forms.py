@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 
 import re
 
-from core.models import Appointment, Review, Vehicle
+from core.models import Appointment, Review, Vehicle, User, Profile
 
 class VehicleForm(ModelForm):
     class Meta:
@@ -47,7 +48,6 @@ class VehicleForm(ModelForm):
 
         return license_plate
 
-
 class BookingForm(ModelForm):
     class Meta:
         model = Appointment
@@ -78,3 +78,93 @@ class ReviewForm(ModelForm):
             'score': forms.NumberInput(attrs={**base_attrs, 'placeholder': 'enter score (1-5)', 'min': 1, 'max': 5}),
             'comment': forms.Textarea(attrs={**base_attrs, 'placeholder': 'enter comment (optional)', 'rows': 4}),
         }
+
+class UserForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ["username", "email", "first_name", "last_name"]
+
+        base_attrs = {
+            'class': 'w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all',
+            'maxlength': 50,
+        }
+
+        widgets = {
+            'username': forms.TextInput(attrs={**base_attrs, 'placeholder': 'enter your username'}),
+            'email': forms.EmailInput(attrs={**base_attrs, 'placeholder': 'enter your email'}),
+            'first_name': forms.TextInput(attrs={**base_attrs, 'placeholder': 'enter your first name'}),
+            'last_name': forms.TextInput(attrs={**base_attrs, 'placeholder': 'enter your last name'}),
+        }
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        # ต้องเป็นอักษรเท่านั้น และสามาระเป็นค่าว่างได้
+        if first_name and not first_name.isalpha():
+            raise ValidationError("First name must contain only letters.")
+        return first_name.capitalize()
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        # ต้องเป็นอักษรเท่านั้น และสามาระเป็นค่าว่างได้
+        if last_name and not last_name.isalpha():
+            raise ValidationError("Last name must contain only letters.")
+        return last_name.capitalize()
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["phone_number"]
+
+    base_attrs = {
+        'class': 'w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all',
+        'maxlength': 15,
+        'placeholder': 'enter your phone number',
+    }
+
+    phone_number = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs=base_attrs),
+    )
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+
+        # Allow empty phone number
+        if phone_number is None:
+            return None
+
+        normalized = str(phone_number).strip()
+        if normalized in {"", "-", "null", "[null]"}:
+            return None
+        # ต้องการแค่ pattern  0XXXXXXXXX นี้เท่านั้น
+        pattern = r'^0\d{9}$'
+        if not re.match(pattern, normalized):
+            raise ValidationError("Invalid phone number format.")
+
+        qs = Profile.objects.filter(phone_number=normalized)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise ValidationError("This phone number already exists.")
+
+        return normalized
+
+class PasswordChangeForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = ["old_password", "new_password1", "new_password2"]
+
+    base_attrs = {
+        'class': 'w-full px-6 py-4 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all',
+        'maxlength': 128,
+    }
+
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={**base_attrs, 'placeholder': 'enter your old password'})
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={**base_attrs, 'placeholder': 'enter your new password'})
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={**base_attrs, 'placeholder': 'confirm your new password'})
+    )
