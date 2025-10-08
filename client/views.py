@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from client.models import *
 
-from client.forms import VehicleForm, BookingForm, ReviewForm
+from core.models import Appointment, Review, Vehicle
+
+from client.forms import VehicleForm, BookingForm, ReviewForm, UserForm, ProfileForm, PasswordChangeForm
 
 # Create your views here.
-
 class HomeView(View):
     def get(self, request):
         return render(request, 'home.html')
-    
+
 class BookView(View):
     def get(self, request):
         form = BookingForm()
@@ -146,8 +146,67 @@ class DeleteVehicleView(View):
 
 class ProfileView(View):
     def get(self, request):
-        return render(request, 'profile.html')
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        user = request.user
+        profile = getattr(user, "profile", None)
+        raw_phone = getattr(profile, "phone_number", None)
+        phone_number_display = "-"
+        if raw_phone:
+            normalized = str(raw_phone).strip().lower()
+            if normalized not in {"null", "[null]"}:
+                phone_number_display = raw_phone
+
+        return render(
+            request,
+            'profile.html',
+            {
+                'user': user,
+                'profile': profile,
+                'phone_number_display': phone_number_display,
+            },
+        )
 
 class EditProfileView(View):
-    def get(self, request, user_id):
-        return render(request, 'edit_profile.html')
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        user = request.user
+        profile = getattr(user, "profile", None)
+        form_user = UserForm(instance=user)
+        form_profile = ProfileForm(instance=profile)
+        return render(request, 'edit_profile.html', {'form_user': form_user, 'form_profile': form_profile})
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        user = request.user
+        profile = getattr(user, "profile", None)
+        form_user = UserForm(request.POST, instance=user)
+        form_profile = ProfileForm(request.POST, instance=profile)
+        if form_user.is_valid() and form_profile.is_valid():
+            form_user.save()
+            form_profile.save()
+            return redirect('profile')
+        return render(request, 'edit_profile.html', {'form_user': form_user, 'form_profile': form_profile})
+
+class PasswordChangeView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'change_password.html', {'form': form})
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        return render(request, 'change_password.html', {'form': form})
