@@ -1,0 +1,54 @@
+{% extends 'base_staff.html' %}
+
+{% block content %}
+<main class="max-w-4xl mx-auto px-6 py-12">
+    <!-- Page Title  -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-3">Edit Status</h1>
+        <p class="text-slate-400 text-lg">change status of appointment</p>
+    </div>
+
+    <!-- Edit Status Form  -->
+    <form>
+        <div class="bg-slate-800/50 rounded-2xl p-12 max-w-2xl mx-auto">
+            <!-- Status Selection  -->
+            <div class="flex flex-wrap justify-between mb-8">
+                <label class="cursor-pointer">
+                    <input type="radio" name="status" value="pending" class="peer sr-only" checked>
+                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
+                        PENDING
+                    </div>
+                </label>
+
+                <label class="cursor-pointer">
+                    <input type="radio" name="status" value="in-progress" class="peer sr-only">
+                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
+                        IN-PROGRESS
+                    </div>
+                </label>
+
+                <label class="cursor-pointer">
+                    <input type="radio" name="status" value="done" class="peer sr-only">
+                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
+                        DONE
+                    </div>
+                </label>
+
+                <label class="cursor-pointer">
+                    <input type="radio" name="status" value="reject" class="peer sr-only">
+                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
+                        REJECT
+                    </div>
+                </label>
+            </div>
+
+            <!-- Save Button  -->
+            <a href="{% url 'appointment_list' %}">
+                <button type="submit" class="w-full py-3 px-4 bg-green-500 text-slate-900 rounded-xl font-semibold text-lg hover:bg-green-600 transition-colors">
+                    save
+                </button>
+            </a>
+        </div>
+    </form>
+</main>
+{% endblock %}

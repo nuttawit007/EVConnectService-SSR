@@ -1,0 +1,63 @@
+{% extends 'base_staff.html' %}
+
+{% block content %}
+<main class="container mx-auto px-6 py-12">
+    <!-- Page Title  -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2">Vehicles</h1>
+        <p class="text-slate-400 text-lg">Total 4 vehicles</p>
+    </div>
+
+    <!-- Vehicles Table  -->
+    <div class="bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-slate-700 bg-slate-900">
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">No.</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">username</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">License plate</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">Brand</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">Model</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Vehicle 1  -->
+                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-5 text-white">1</td>
+                    <td class="px-6 py-5 text-white">win</td>
+                    <td class="px-6 py-5 text-white">11 กก 1111</td>
+                    <td class="px-6 py-5 text-white">Tesla</td>
+                    <td class="px-6 py-5 text-white">Tesla Model 3</td>
+                </tr>
+
+                <!-- Vehicle 2  -->
+                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-5 text-white">2</td>
+                    <td class="px-6 py-5 text-white">win</td>
+                    <td class="px-6 py-5 text-white">2 กก 2222</td>
+                    <td class="px-6 py-5 text-white">Tesla</td>
+                    <td class="px-6 py-5 text-white">Tesla Moel 3</td>
+                </tr>
+
+                <!-- Vehicle 3  -->
+                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-5 text-white">3</td>
+                    <td class="px-6 py-5 text-white">win</td>
+                    <td class="px-6 py-5 text-white">3 กก 3333</td>
+                    <td class="px-6 py-5 text-white">BYD</td>
+                    <td class="px-6 py-5 text-white">BYD Auto 3</td>
+                </tr>
+
+                <!-- Vehicle 4  -->
+                <tr class="hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-5 text-white">4</td>
+                    <td class="px-6 py-5 text-white">win</td>
+                    <td class="px-6 py-5 text-white">4 งง 4444</td>
+                    <td class="px-6 py-5 text-white">BYD</td>
+                    <td class="px-6 py-5 text-white">BYD Auto 3</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}
