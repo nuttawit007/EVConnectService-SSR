@@ -4,7 +4,7 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6 py-4 mt-4">
         <!-- Page Title -->
-        <h1 class="text-4xl font-bold mb-5">Dashboard</h1>
+        <h1 class="text-3xl font-bold mb-5">Dashboard</h1>
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -12,7 +12,7 @@
             <div class="bg-slate-800 rounded-xl overflow-hidden border-l-4 border-yellow-400">
                 <div class="p-6">
                     <h3 class="text-xl text-slate-300 mb-2">Appointments</h3>
-                    <p class="text-5xl font-bold">7</p>
+                    <p class="text-5xl font-bold">{{ total_appointments }}</p>
                 </div>
             </div>
 
@@ -20,7 +20,7 @@
             <div class="bg-slate-800 rounded-xl overflow-hidden border-l-4 border-yellow-400">
                 <div class="p-6">
                     <h3 class="text-xl text-slate-300 mb-2">Vehicles</h3>
-                    <p class="text-5xl font-bold">12</p>
+                    <p class="text-5xl font-bold">{{ total_vehicles }}</p>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
             <div class="bg-slate-800 rounded-xl overflow-hidden border-l-4 border-yellow-400">
                 <div class="p-6">
                     <h3 class="text-xl text-slate-300 mb-2">Users</h3>
-                    <p class="text-5xl font-bold">6</p>
+                    <p class="text-5xl font-bold">{{ total_users }}</p>
                 </div>
             </div>
         </div>
@@ -76,52 +76,21 @@
             <!-- Rating Section -->
             <div>
                 <h2 class="text-2xl font-bold mb-4">Rating</h2>
-                <div class="bg-slate-800 rounded-xl p-6">
+                <div class="bg-slate-800 rounded-xl p-6 space-y-4">
+                    <p class="text-slate-400 text-sm">Total reviews: {{ total_reviews }}</p>
                     <div class="space-y-6">
-                        <!-- 1 Star -->
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl font-semibold w-8">1</span>
-                            <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        {% for stat in rating_stats %}
+                            <div class="flex items-center gap-4">
+                                <span class="text-2xl font-semibold w-8">{{ stat.score }}</span>
+                                <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                                        style="width: {{ stat.percentage }}%;">
+                                    </div>
+                                </div>
+                                <span class="text-lg w-20 text-right">{{ stat.percentage }}%</span>
+                                <span class="text-sm text-slate-400 w-20 text-right">{{ stat.count }} votes</span>
                             </div>
-                            <span class="text-lg w-16 text-right">0%</span>
-                        </div>
-
-                        <!-- 2 Stars -->
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl font-semibold w-8">2</span>
-                            <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                            <span class="text-lg w-16 text-right">0%</span>
-                        </div>
-
-                        <!-- 3 Stars -->
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl font-semibold w-8">3</span>
-                            <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                            <span class="text-lg w-16 text-right">0%</span>
-                        </div>
-
-                        <!-- 4 Stars -->
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl font-semibold w-8">4</span>
-                            <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" style="width: 10%"></div>
-                            </div>
-                            <span class="text-lg w-16 text-right">10%</span>
-                        </div>
-
-                        <!-- 5 Stars -->
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl font-semibold w-8">5</span>
-                            <div class="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-500" style="width: 90%"></div>
-                            </div>
-                            <span class="text-lg w-16 text-right">90%</span>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -130,10 +99,11 @@
 
     <script>
         // Calendar functionality
-        let currentDate = new Date(2025, 9, 1); // October 2025 (month is 0-indexed)
-        
+        let currentDate = new Date();
+
         // Dates with appointments (highlighted in yellow)
-        const appointmentDates = [15, 16];
+        // appointment_dates_json มาจาก views.py 
+        const appointmentDates = JSON.parse('{{ appointment_dates_json|escapejs }}');
 
         function renderCalendar() {
             const year = currentDate.getFullYear();
@@ -161,15 +131,14 @@
             // Add days of month
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayCell = document.createElement('div');
-                dayCell.className = 'text-center py-3 rounded-lg';
-                
-                // Check if this day has an appointment
-                if (appointmentDates.includes(day)) {
-                    dayCell.className += ' bg-yellow-400 text-slate-900 font-bold';
-                } else {
-                    dayCell.className += ' text-slate-300';
+                dayCell.className = 'text-center py-3 rounded-lg text-slate-300';
+
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                if (appointmentDates.includes(dateKey)) {
+                    dayCell.className = 'text-center py-3 rounded-lg bg-yellow-400 text-slate-900 font-bold';
                 }
-                
+
                 dayCell.textContent = day;
                 calendarDays.appendChild(dayCell);
             }

@@ -1,10 +1,55 @@
+import json
+
+from django.db.models import Count
 from django.shortcuts import render
 from django.views import View
+
+from django.contrib.auth.models import User
+
+from core.models import Appointment, Vehicle, Review
 
 # Create your views here.
 class DashboardView(View):
     def get(self, request):
-        return render(request, 'dashboard.html')
+        total_appointments = Appointment.objects.count()
+        total_vehicles = Vehicle.objects.count()
+        total_users = User.objects.count()
+        # Appointments over time for chart
+        appointment_dates = list(
+            Appointment.objects.values_list('date', flat=True)
+        )
+        appointment_dates_json = json.dumps(
+            [date.isoformat() for date in appointment_dates]
+        )
+        # Rating statistics
+        total_reviews = Review.objects.count()
+
+        score_counts = dict(
+            Review.objects.values('score')
+            .annotate(total=Count('score'))
+            .values_list('score', 'total')
+        )
+        print('Score counts:', score_counts)
+
+        rating_stats = []
+        for score in range(1, 6):
+            count = score_counts.get(score, 0)
+            percentage = (count / total_reviews * 100) if total_reviews else 0
+            rating_stats.append({
+                'score': score,
+                'count': count,
+                'percentage': round(percentage, 2),
+            })
+        print('Rating stats:', rating_stats)
+
+        return render(request, 'dashboard.html', {
+            'total_appointments': total_appointments,
+            'total_vehicles': total_vehicles,
+            'total_users': total_users,
+            'appointment_dates_json': appointment_dates_json,
+            'rating_stats': rating_stats,
+            'total_reviews': total_reviews,
+        })
 
 class AppointmentListView(View):
     def get(self, request):
