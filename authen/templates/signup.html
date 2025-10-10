@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bg-slate-800 rounded-2xl p-8 shadow-2xl">
+    <div class="w-full max-w-2xl bg-slate-800 rounded-2xl p-8 shadow-2xl">
         <h1 class="text-4xl font-bold text-white text-center mb-3">Signup</h1>
         <p class="text-slate-400 text-center mb-8">Get started! create your account</p>
         {% if messages %}
@@ -17,14 +17,22 @@
                 </div>
             {% endfor %}
         {% endif %}
-        {% if form.errors %}
+        {% if signup_form.errors or profile_form.errors %}
             <div class="mb-6 rounded-xl border border-red-500 bg-red-950/70 px-4 py-3 text-sm text-red-200 space-y-1">
-                {% for field in form %}
+                {% for field in signup_form %}
                     {% for error in field.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 {% endfor %}
-                {% for error in form.non_field_errors %}
+                {% for error in signup_form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+                {% for field in profile_form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in profile_form.non_field_errors %}
                     <p>{{ error }}</p>
                 {% endfor %}
             </div>
@@ -32,6 +40,7 @@
         <!-- Signup Form -->
         <form method="POST" action="{% url 'signup' %}"  class="space-y-6">
             {% csrf_token %}
+            <!-- Username -->
             <div>
                 <label for="username" class="block text-white text-lg mb-3">username</label>
                 <input 
@@ -40,47 +49,103 @@
                     name="username" 
                     placeholder="enter your username"
                     class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                    value="{{ form.data.username|default_if_none:'' }}"
+                    value="{{ signup_form.data.username|default_if_none:'' }}"
                     required
                 >
             </div>
-            <div>
-                <label for="password1" class="block text-white text-lg mb-3">password</label>
-                <input 
-                    type="password" 
-                    id="password1" 
-                    name="password1" 
-                    placeholder="enter your password"
-                    class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                    required
-                >
+
+            <!-- Name Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Firstname -->
+                <div>
+                    <label for="first_name" class="block text-white text-lg mb-3">firstname</label>
+                    <input 
+                        type="text" 
+                        id="first_name" 
+                        name="first_name" 
+                        placeholder="enter your firstname"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        value="{{ signup_form.data.first_name|default_if_none:'' }}"
+                        required
+                    >
+                </div>
+                <!-- Lastname -->
+                <div>
+                    <label for="last_name" class="block text-white text-lg mb-3">lastname</label>
+                    <input 
+                        type="text" 
+                        id="last_name" 
+                        name="last_name" 
+                        placeholder="enter your lastname"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        value="{{ signup_form.data.last_name|default_if_none:'' }}"
+                        required
+                    >
+                </div>
             </div>
-            <div>
-                <label for="password2" class="block text-white text-lg mb-3">confirm password</label>
-                <input 
-                    type="password" 
-                    id="password2" 
-                    name="password2" 
-                    placeholder="confirm your password"
-                    class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                    required
-                >
+
+            <!-- Password Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Password -->
+                <div>
+                    <label for="password1" class="block text-white text-lg mb-3">password</label>
+                    <input 
+                        type="password" 
+                        id="password1" 
+                        name="password1" 
+                        placeholder="enter your password"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        required
+                    >
+                </div>
+                <!-- Password Confirmation -->
+                <div>
+                    <label for="password2" class="block text-white text-lg mb-3">confirm password</label>
+                    <input 
+                        type="password" 
+                        id="password2" 
+                        name="password2" 
+                        placeholder="confirm your password"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        required
+                    >
+                </div>
             </div>
-            <div>
-                <label for="email" class="block text-white text-lg mb-3">email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="enter your email"
-                    class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                    required
-                >
+
+            <!-- Email and Phone Number Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-white text-lg mb-3">email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="enter your email"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        value="{{ signup_form.data.email|default_if_none:'' }}"
+                        required
+                    >
+                </div>
+                <!-- Phone number -->
+                <div>
+                    <label for="phone_number" class="block text-white text-lg mb-3">Phone number</label>
+                    <input 
+                        type="text" 
+                        id="phone_number" 
+                        name="phone_number" 
+                        placeholder="enter your phone number"
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                        value="{{ profile_form.data.phone_number|default_if_none:'' }}"
+                        required
+                    >
+                </div>
             </div>
+            <!-- Signup Button -->
             <div class="flex flex-col items-start">
                 <button 
                     type="submit"
-                    class="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold text-lg py-3 rounded-xl transition-colors">
+                    class="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold text-lg py-3 rounded-xl transition-colors cursor-pointer">
                     Signup
                 </button>
                 <p class="text-slate-400 text-center mt-6">
@@ -88,7 +153,6 @@
                     <a href="{% url 'login' %}" class="text-yellow-400 underline hover:text-yellow-300 transition-colors">Login</a>
                 </p>
             </div>
-
         </form>
     </div>
 

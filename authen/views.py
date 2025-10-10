@@ -4,7 +4,7 @@ from django.views import View
 
 # Import authentication related modules
 from django.contrib.auth import login, logout
-from .forms import SignUpForm, LoginForm
+from .forms import ProfileForm, SignUpForm, LoginForm
 from django.contrib.auth.models import Group
 
 class LoginView(View):
@@ -41,16 +41,36 @@ class LogoutView(View):
 
 class SignupView(View):
     def get(self, request):
-        form = SignUpForm()
-        return render(request, 'signup.html', {"form": form})
+        signup_form = SignUpForm()
+        profile_form = ProfileForm()
+        return render(request, 'signup.html', {
+            "signup_form": signup_form, 
+            "profile_form": profile_form
+        })
 
     def post(self, request):
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            client_group = Group.objects.get(name='Client')
-            user.groups.add(client_group)
+        signup_form = SignUpForm(request.POST)
+        profile_form = ProfileForm(request.POST)
+
+        if signup_form.is_valid() and profile_form.is_valid():
+            # สร้าง user
+            user = signup_form.save()
+            # สร้าง profile พร้อมผูก user
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.pk = user.pk
+            profile.save()
+            # เพิ่ม user เข้า group client
+            try:
+                client_group = Group.objects.get(name='Client')
+                user.groups.add(client_group)
+            except Group.DoesNotExist:
+                messages.warning(request, "Client group not found. Please contact administrator.")
+
             messages.success(request, "Account created successfully. Please log in.")
             return redirect('login')
 
-        return render(request, 'signup.html', {"form": form})
+        return render(request, 'signup.html', {
+            "signup_form": signup_form, 
+            "profile_form": profile_form
+        })

@@ -118,7 +118,6 @@ class UserForm(UserChangeForm):
             raise ValidationError("Last name must contain only letters.")
         return last_name.capitalize()
 
-
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if not email or str(email).strip() == "":
