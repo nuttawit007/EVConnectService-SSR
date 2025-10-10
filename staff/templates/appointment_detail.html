@@ -3,7 +3,7 @@
 {% block content %}
 <main class="max-w-4xl mx-auto px-6 py-12">
     <!-- Page Title  -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-4">
         <h1 class="text-4xl font-bold mb-2">Appointment Detail</h1>
         <p class="text-slate-400">show appointment information</p>
     </div>
@@ -15,19 +15,19 @@
             <div>
                 <label class="block text-white mb-2">License plate</label>
                 <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                    1 กก 1111
+                    {{ license_plate }}
                 </div>
             </div>
             <div>
                 <label class="block text-white mb-2">Brand</label>
                 <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                    Tesla
+                    {{ brand }}
                 </div>
             </div>
             <div>
                 <label class="block text-white mb-2">Model</label>
                 <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                    Tesla Model3
+                    {{ model }}
                 </div>
             </div>
         </div>
@@ -37,13 +37,13 @@
             <div>
                 <label class="block text-white mb-2">Date</label>
                 <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                    11 / 10 / 2025
+                    {{ formatted_date }}
                 </div>
             </div>
             <div>
                 <label class="block text-white mb-2">Time</label>
                 <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                    11:00
+                    {{ formatted_time }}
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="mb-6">
             <label class="block text-white mb-2">Service</label>
             <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg">
-                Maintenance Service
+                {{ services }}
             </div>
         </div>
 
@@ -60,7 +60,7 @@
         <div class="mb-8">
             <label class="block text-white mb-2">Description</label>
             <div class="bg-slate-700 text-slate-300 px-4 py-3 rounded-lg min-h-[100px]">
-                check 10,000 km
+                {{ description }}
             </div>
         </div>
 

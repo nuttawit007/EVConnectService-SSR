@@ -76,8 +76,23 @@ class AppointmentListView(View):
 
 class AppointmentDetailView(View):
     def get(self, request, appointment_id):
-        # Logic to retrieve and display details of a specific appointment
-        return render(request, 'appointment_detail.html')
+        appointment_detail = Appointment.objects.get(pk=appointment_id)
+        vehicle = appointment_detail.vehicle if appointment_detail.vehicle_id else None
+        license_plate = vehicle.license_plate if vehicle else '-'
+        brand = vehicle.brand if vehicle else '-'
+        model = vehicle.model if vehicle else '-'
+        services = ', '.join(appointment_detail.service_types.values_list('name', flat=True))
+
+        return render(request, 'appointment_detail.html', {
+            'appointment': appointment_detail,
+            'license_plate': license_plate,
+            'brand': brand,
+            'model': model,
+            'services': services,
+            'formatted_date': appointment_detail.date.strftime('%d / %m / %Y'),
+            'formatted_time': appointment_detail.time.strftime('%H:%M'),
+            'description': appointment_detail.description or '-',
+        })
 
 class AppointmentEditView(View):
     def get(self, request, appointment_id):
