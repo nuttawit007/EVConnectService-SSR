@@ -78,7 +78,7 @@ class AppointmentDetailView(View):
     def get(self, request, appointment_id):
         appointment_detail = Appointment.objects.get(pk=appointment_id)
         vehicle = appointment_detail.vehicle if appointment_detail.vehicle_id else None
-        license_plate = vehicle.license_plate if vehicle else '-'
+        license_plate = vehicle.license_plate
         brand = vehicle.brand if vehicle else '-'
         model = vehicle.model if vehicle else '-'
         services = ', '.join(appointment_detail.service_types.values_list('name', flat=True))
@@ -174,5 +174,23 @@ class ReviewListView(View):
 
 class ReviewDetailView(View):
     def get(self, request, review_id):
-        # Logic to retrieve and display details of a specific review
-        return render(request, 'review_detail.html')
+        review = Review.objects.get(pk=review_id)
+        appointment = review.appointment
+        vehicle = appointment.vehicle if appointment else None
+        services = list(appointment.service_types.values_list('name', flat=True)) if appointment else []
+        if not services:
+            services = ['-']
+
+        review_data = {
+            'review': review,
+            'license_plate': vehicle.license_plate,
+            'brand': vehicle.brand,
+            'model': vehicle.model,
+            'formatted_date': appointment.date.strftime('%d / %m / %Y') if appointment else '-',
+            'formatted_time': appointment.time.strftime('%H:%M'),
+            'services': services,
+            'description': appointment.description or '-' if appointment else '-',
+            'score': review.score,
+            'comment': review.comment or '-',
+        }
+        return render(request, 'review_detail.html', review_data)
