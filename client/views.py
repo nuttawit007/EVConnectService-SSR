@@ -15,6 +15,7 @@ class HomeView(View):
 class BookView(LoginRequiredMixin, View):
     def get(self, request):
         form = BookingForm()
+        form.fields['vehicle'].queryset = Vehicle.objects.filter(user=request.user)
         times_morning = ["8:00", "9:00", "10:00", "11:00"]
         times_afternoon = ["14:00", "15:00", "16:00", "17:00"]
         # ดึง slot ที่ถูกจองแล้วทั้งหมด
@@ -32,9 +33,10 @@ class BookView(LoginRequiredMixin, View):
 
     def post(self, request):
         form = BookingForm(request.POST)
+        form.fields['vehicle'].queryset = Vehicle.objects.filter(user=request.user)
         if form.is_valid():
             appointment = form.save(commit=False)
-            appointment.user_id = 1
+            appointment.user = request.user
             appointment.save()
             form.instance = appointment  # สำคัญ! ให้ฟอร์มรู้ว่า instance ที่ save คือ appointment นี้
             form.save_m2m()              # บันทึก ManyToMany ลง client_appointment_service_types
@@ -56,14 +58,14 @@ class BookView(LoginRequiredMixin, View):
 
 class AppointmentView(LoginRequiredMixin, View):
     def get(self, request):
-        query = Appointment.objects.all().order_by('-id')
-        appointments = []
-        for ap in query:
+        appointments = Appointment.objects.filter(user=request.user).order_by('-id')
+        appointment_rows = []
+        for ap in appointments:
             service = " , ".join(ap.service_types.values_list('name', flat=True))
             review = Review.objects.filter(appointment=ap).first()
             review_score = review.score if review else None
 
-            appointments.append({
+            appointment_rows.append({
                 "id": ap.id,
                 "license_plate": ap.vehicle.license_plate if ap.vehicle_id else None,
                 "service": service,
@@ -71,8 +73,8 @@ class AppointmentView(LoginRequiredMixin, View):
                 "status": ap.status,
                 "review_score": review_score,
             })
-        print(appointments)
-        return render(request, 'appointment.html', {'appointments' : appointments})
+        print(appointment_rows)
+        return render(request, 'appointment.html', {'appointments' : appointment_rows})
 
 class ReviewView(LoginRequiredMixin, View):
     def get(self, request, appointment_id):
@@ -102,7 +104,7 @@ class ReviewView(LoginRequiredMixin, View):
 
 class VehicleView(LoginRequiredMixin, View):
     def get(self, request):
-        query = Vehicle.objects.all().order_by('id')
+        query = Vehicle.objects.filter(user=request.user).order_by('id')
         vehicles = []
         for vehicle in query:
             vehicles.append({
@@ -122,7 +124,9 @@ class AddVehicleView(LoginRequiredMixin, View):
     def post(self, request):
         form = VehicleForm(request.POST)
         if form.is_valid():
-            form.save()
+            vehicle = form.save(commit=False)
+            vehicle.user = request.user  # กำหนด user เป็นคนที่ login
+            vehicle.save()
             return redirect('vehicle')
         return render(request, 'add_vehicle.html', {'form' : form})
 
@@ -136,7 +140,9 @@ class EditVehicleView(LoginRequiredMixin, View):
         vehicle = Vehicle.objects.get(pk=vehicle_id)
         form = VehicleForm(request.POST, instance=vehicle)
         if form.is_valid():
-            form.save()
+            vehicle = form.save(commit=False)
+            vehicle.user = request.user  # กำหนด user เป็นคนที่ login
+            vehicle.save()
             return redirect('vehicle')
         return render(request, 'edit_vehicle.html', {'form': form, 'vehicle_id': vehicle_id})
     
