@@ -29,7 +29,6 @@ class DashboardView(View):
             .annotate(total=Count('score'))
             .values_list('score', 'total')
         )
-        print('Score counts:', score_counts)
 
         rating_stats = []
         for score in range(1, 6):
@@ -40,7 +39,6 @@ class DashboardView(View):
                 'count': count,
                 'percentage': round(percentage, 2),
             })
-        print('Rating stats:', rating_stats)
 
         return render(request, 'dashboard.html', {
             'total_appointments': total_appointments,
@@ -53,8 +51,26 @@ class DashboardView(View):
 
 class AppointmentListView(View):
     def get(self, request):
-        # Logic to retrieve and display a list of appointments
-        return render(request, 'appointment_list.html')
+        appointments =  Appointment.objects.all().order_by('id')
+
+        appointment_rows = []
+        for idx, appointment in enumerate(appointments, start=1):
+            service_list = ', '.join(appointment.service_types.values_list('name', flat=True))
+            status_raw = appointment.status.upper()
+            appointment_rows.append({
+                'index': idx,
+                'id': appointment.id,
+                'license_plate': appointment.vehicle.license_plate if appointment.vehicle else '-',
+                'services': service_list,
+                'date': appointment.date.strftime('%d/%m/%Y'),
+                'time': appointment.time.strftime('%H:%M'),
+                'status': status_raw,
+            })
+
+        return render(request, 'appointment_list.html', {
+            'total_appointments': appointments.count(),
+            'appointments': appointment_rows,
+        })
 
 class AppointmentDetailView(View):
     def get(self, request, appointment_id):
