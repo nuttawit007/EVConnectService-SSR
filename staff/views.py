@@ -84,8 +84,27 @@ class AppointmentEditView(View):
 
 class VehicleListView(View):
     def get(self, request):
-        # Logic to retrieve and display a list of vehicles
-        return render(request, 'vehicle_list.html')
+        vehicles = (
+            Vehicle.objects
+            .select_related('user')
+            .order_by('id')
+        )
+        vehicle_rows = [
+            {
+                'index': idx,
+                'id': vehicle.id,
+                'username': vehicle.user.username if vehicle.user else '-',
+                'license_plate': vehicle.license_plate,
+                'brand': vehicle.brand,
+                'model': vehicle.model,
+            }
+            for idx, vehicle in enumerate(vehicles, start=1)
+        ]
+
+        return render(request, 'vehicle_list.html', {
+            'total_vehicles': vehicles.count(),
+            'vehicles': vehicle_rows,
+        })
 
 class ReviewListView(View):
     def get(self, request):

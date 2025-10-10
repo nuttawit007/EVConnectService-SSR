@@ -5,7 +5,7 @@
     <!-- Page Title  -->
     <div class="mb-8">
         <h1 class="text-4xl font-bold mb-2">Vehicles</h1>
-        <p class="text-slate-400 text-lg">Total 4 vehicles</p>
+        <p class="text-slate-400 text-lg">Total {{ total_vehicles }} vehicles</p>
     </div>
 
     <!-- Vehicles Table  -->
@@ -21,41 +21,19 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Vehicle 1  -->
-                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-5 text-white">1</td>
-                    <td class="px-6 py-5 text-white">win</td>
-                    <td class="px-6 py-5 text-white">11 กก 1111</td>
-                    <td class="px-6 py-5 text-white">Tesla</td>
-                    <td class="px-6 py-5 text-white">Tesla Model 3</td>
-                </tr>
-
-                <!-- Vehicle 2  -->
-                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-5 text-white">2</td>
-                    <td class="px-6 py-5 text-white">win</td>
-                    <td class="px-6 py-5 text-white">2 กก 2222</td>
-                    <td class="px-6 py-5 text-white">Tesla</td>
-                    <td class="px-6 py-5 text-white">Tesla Moel 3</td>
-                </tr>
-
-                <!-- Vehicle 3  -->
-                <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-5 text-white">3</td>
-                    <td class="px-6 py-5 text-white">win</td>
-                    <td class="px-6 py-5 text-white">3 กก 3333</td>
-                    <td class="px-6 py-5 text-white">BYD</td>
-                    <td class="px-6 py-5 text-white">BYD Auto 3</td>
-                </tr>
-
-                <!-- Vehicle 4  -->
-                <tr class="hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-5 text-white">4</td>
-                    <td class="px-6 py-5 text-white">win</td>
-                    <td class="px-6 py-5 text-white">4 งง 4444</td>
-                    <td class="px-6 py-5 text-white">BYD</td>
-                    <td class="px-6 py-5 text-white">BYD Auto 3</td>
-                </tr>
+                {% for vehicle in vehicles %}
+                    <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-5 text-white">{{ vehicle.index }}</td>
+                        <td class="px-6 py-5 text-white">{{ vehicle.username }}</td>
+                        <td class="px-6 py-5 text-white">{{ vehicle.license_plate }}</td>
+                        <td class="px-6 py-5 text-white">{{ vehicle.brand }}</td>
+                        <td class="px-6 py-5 text-white">{{ vehicle.model }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-6 text-center text-slate-400">No vehicles found.</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
