@@ -28,7 +28,7 @@
                             edit
                         </button>
                     </a>
-                    <form method="POST" action="{% url 'delete_vehicle' vehicle.id %}">
+                    <form method="POST" action="{% url 'delete_vehicle' vehicle_id=vehicle.id %}">
                         {% csrf_token %}
                         <button type="submit" class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg font-medium transition-colors">
                             delete

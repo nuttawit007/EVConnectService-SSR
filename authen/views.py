@@ -5,6 +5,7 @@ from django.views import View
 # Import authentication related modules
 from django.contrib.auth import login, logout
 from .forms import SignUpForm, LoginForm
+from django.contrib.auth.models import Group
 
 class LoginView(View):
     def get(self, request):
@@ -46,7 +47,9 @@ class SignupView(View):
     def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            client_group = Group.objects.get(name='Client')
+            user.groups.add(client_group)
             messages.success(request, "Account created successfully. Please log in.")
             return redirect('login')
 
