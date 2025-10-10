@@ -108,8 +108,27 @@ class VehicleListView(View):
 
 class ReviewListView(View):
     def get(self, request):
-        # Logic to retrieve and display a list of reviews
-        return render(request, 'review_list.html')
+        reviews = (
+            Review.objects
+            .select_related('appointment__vehicle', 'appointment__user')
+            .order_by('id')
+        )
+        review_rows = []
+        for idx, review in enumerate(reviews, start=1):
+            appointment = review.appointment
+            vehicle = appointment.vehicle if appointment else None
+            review_rows.append({
+                'index': idx,
+                'id': review.id,
+                'score': review.score,
+                'comment': review.comment or '-',
+                'appointment_number': appointment.id if appointment else '-',
+                'license_plate': vehicle.license_plate if vehicle else '-',
+            })
+        return render(request, 'review_list.html', {
+            'total_reviews': reviews.count(),
+            'reviews': review_rows,
+        })
 
 class ReviewDetailView(View):
     def get(self, request, review_id):
