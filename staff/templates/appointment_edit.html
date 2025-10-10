@@ -9,45 +9,44 @@
     </div>
 
     <!-- Edit Status Form  -->
-    <form>
-        <div class="bg-slate-800/50 rounded-2xl p-12 max-w-2xl mx-auto">
+    <form method="POST" action="{% url 'appointment_edit' appointment.id %}" class="max-w-2xl mx-auto">
+        {% csrf_token %}
+        <div class="bg-slate-800/50 rounded-2xl p-12">
+            {% if form.errors %}
+                <div class="mb-6 rounded-xl border border-red-500 bg-red-950/70 px-6 py-4 text-sm text-red-200 space-y-1">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <!-- Status Selection  -->
-            <div class="flex flex-wrap justify-between mb-8">
-                <label class="cursor-pointer">
-                    <input type="radio" name="status" value="pending" class="peer sr-only" checked>
-                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
-                        PENDING
-                    </div>
-                </label>
-
-                <label class="cursor-pointer">
-                    <input type="radio" name="status" value="in-progress" class="peer sr-only">
-                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
-                        IN-PROGRESS
-                    </div>
-                </label>
-
-                <label class="cursor-pointer">
-                    <input type="radio" name="status" value="done" class="peer sr-only">
-                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
-                        DONE
-                    </div>
-                </label>
-
-                <label class="cursor-pointer">
-                    <input type="radio" name="status" value="reject" class="peer sr-only">
-                    <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
-                        REJECT
-                    </div>
-                </label>
+            <div class="flex flex-wrap justify-between  mb-8">
+                {% for value, label in status_choices %}
+                    <label class="cursor-pointer">
+                        <input
+                            type="radio"
+                            name="{{ form.status.name }}"
+                            value="{{ value }}"
+                            class="peer sr-only"
+                            {% if value == selected_status %}checked{% endif %}
+                        >
+                        <div class="px-8 py-3 bg-slate-700 text-white rounded-xl font-semibold uppercase transition-all peer-checked:bg-yellow-400 peer-checked:text-slate-900 hover:bg-slate-600 peer-checked:hover:bg-yellow-500">
+                            {{ value }}
+                        </div>
+                    </label>
+                {% endfor %}
             </div>
 
             <!-- Save Button  -->
-            <a href="{% url 'appointment_list' %}">
-                <button type="submit" class="w-full py-3 px-4 bg-green-500 text-slate-900 rounded-xl font-semibold text-lg hover:bg-green-600 transition-colors">
-                    save
-                </button>
-            </a>
+            <button type="submit" class="w-full py-3 px-4 bg-green-500 text-slate-900 rounded-xl font-semibold text-lg hover:bg-green-600 transition-colors">
+                save
+            </button>
         </div>
     </form>
 </main>

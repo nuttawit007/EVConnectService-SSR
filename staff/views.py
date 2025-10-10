@@ -1,12 +1,14 @@
 import json
 
+from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 
-from django.contrib.auth.models import User
-
 from core.models import Appointment, Vehicle, Review
+
+from staff.forms import AppointmentStatusForm
 
 # Create your views here.
 class DashboardView(View):
@@ -51,7 +53,7 @@ class DashboardView(View):
 
 class AppointmentListView(View):
     def get(self, request):
-        appointments =  Appointment.objects.all().order_by('id')
+        appointments =  Appointment.objects.all().order_by('-date', '-time')
 
         appointment_rows = []
         for idx, appointment in enumerate(appointments, start=1):
@@ -79,8 +81,33 @@ class AppointmentDetailView(View):
 
 class AppointmentEditView(View):
     def get(self, request, appointment_id):
-        # Logic to edit the status of a specific appointment
-        return render(request, 'appointment_edit.html')
+        appointment = Appointment.objects.get(pk=appointment_id)
+        form = AppointmentStatusForm(instance=appointment)
+        status_choices = Appointment.Status.choices
+        selected_status = form['status'].value() or appointment.status
+        return render(request, 'appointment_edit.html', {
+            'form': form,
+            'appointment': appointment,
+            'status_choices': status_choices,
+            'selected_status': selected_status,
+        })
+
+    def post(self, request, appointment_id):
+        appointment = Appointment.objects.get(pk=appointment_id)
+        form = AppointmentStatusForm(request.POST, instance=appointment)
+        status_choices = Appointment.Status.choices
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Appointment (license plate: {appointment.vehicle.license_plate}) status updated successfully.")
+            return redirect('appointment_list')
+
+        selected_status = form['status'].value() or appointment.status
+        return render(request, 'appointment_edit.html', {
+            'form': form,
+            'appointment': appointment,
+            'status_choices': status_choices,
+            'selected_status': selected_status,
+        })
 
 class VehicleListView(View):
     def get(self, request):
