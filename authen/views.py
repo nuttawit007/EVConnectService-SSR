@@ -16,7 +16,11 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user() 
             login(request,user)
-            return redirect('home')  
+            next_url = request.GET.get('next') or request.POST.get('next')
+            print(next_url)
+            if next_url:
+                return redirect(next_url)
+            return redirect('home')
 
         messages.error(request, "username or password is incorrect")
         return render(request,'login.html', {"form":form})
@@ -24,7 +28,7 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('login')
+        return redirect('home')
 
 class SignupView(View):
     def get(self, request):

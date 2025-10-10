@@ -5,12 +5,14 @@ from core.models import Appointment, Review, Vehicle
 
 from client.forms import VehicleForm, BookingForm, ReviewForm, UserForm, ProfileForm, PasswordChangeForm
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
 class HomeView(View):
     def get(self, request):
         return render(request, 'home.html')
 
-class BookView(View):
+class BookView(LoginRequiredMixin, View):
     def get(self, request):
         form = BookingForm()
         times_morning = ["8:00", "9:00", "10:00", "11:00"]
@@ -52,7 +54,7 @@ class BookView(View):
             'booked_slots': booked_slots_str if booked_slots_str else [],
         })
 
-class AppointmentView(View):
+class AppointmentView(LoginRequiredMixin, View):
     def get(self, request):
         query = Appointment.objects.all().order_by('-id')
         appointments = []
@@ -72,7 +74,7 @@ class AppointmentView(View):
         print(appointments)
         return render(request, 'appointment.html', {'appointments' : appointments})
 
-class ReviewView(View):
+class ReviewView(LoginRequiredMixin, View):
     def get(self, request, appointment_id):
         form = ReviewForm()
         appointment = Appointment.objects.get(pk=appointment_id)
@@ -98,7 +100,7 @@ class ReviewView(View):
             'score': score
         })
 
-class VehicleView(View):
+class VehicleView(LoginRequiredMixin, View):
     def get(self, request):
         query = Vehicle.objects.all().order_by('id')
         vehicles = []
@@ -112,7 +114,7 @@ class VehicleView(View):
         print(vehicles)
         return render(request, 'vehicle.html', {'vehicles' : vehicles})
 
-class AddVehicleView(View):
+class AddVehicleView(LoginRequiredMixin, View):
     def get(self, request):
         form = VehicleForm()
         return render(request, 'add_vehicle.html', {'form' : form})
@@ -124,7 +126,7 @@ class AddVehicleView(View):
             return redirect('vehicle')
         return render(request, 'add_vehicle.html', {'form' : form})
 
-class EditVehicleView(View):
+class EditVehicleView(LoginRequiredMixin, View):
     def get(self, request, vehicle_id):
         vehicle = Vehicle.objects.get(pk=vehicle_id)
         form = VehicleForm(instance=vehicle)
@@ -138,13 +140,13 @@ class EditVehicleView(View):
             return redirect('vehicle')
         return render(request, 'edit_vehicle.html', {'form': form, 'vehicle_id': vehicle_id})
     
-class DeleteVehicleView(View):
+class DeleteVehicleView(LoginRequiredMixin, View):
     def post(self, request, vehicle_id):
         vehicle = Vehicle.objects.get(pk=vehicle_id)
         vehicle.delete()
         return redirect('vehicle')
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
@@ -168,7 +170,7 @@ class ProfileView(View):
             },
         )
 
-class EditProfileView(View):
+class EditProfileView(LoginRequiredMixin, View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
@@ -193,11 +195,10 @@ class EditProfileView(View):
             return redirect('profile')
         return render(request, 'edit_profile.html', {'form_user': form_user, 'form_profile': form_profile})
 
-class PasswordChangeView(View):
+class PasswordChangeView(LoginRequiredMixin, View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
-
         form = PasswordChangeForm(user=request.user)
         return render(request, 'change_password.html', {'form': form})
 

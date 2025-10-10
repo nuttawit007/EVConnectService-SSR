@@ -24,6 +24,9 @@
         <!-- Login Form -->
         <form method="POST" action="{% url 'login' %}"  class="space-y-6">
             {% csrf_token %}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
             {{ form.username.errors }}
             <div>
                 <label for="username" class="block text-white text-lg mb-3">username</label>

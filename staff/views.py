@@ -10,8 +10,10 @@ from core.models import Appointment, Vehicle, Review
 
 from staff.forms import AppointmentStatusForm
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
-class DashboardView(View):
+class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         total_appointments = Appointment.objects.count()
         total_vehicles = Vehicle.objects.count()
@@ -51,7 +53,7 @@ class DashboardView(View):
             'total_reviews': total_reviews,
         })
 
-class AppointmentListView(View):
+class AppointmentListView(LoginRequiredMixin, View):
     def get(self, request):
         appointments =  Appointment.objects.all().order_by('-date', '-time')
 
@@ -74,7 +76,7 @@ class AppointmentListView(View):
             'appointments': appointment_rows,
         })
 
-class AppointmentDetailView(View):
+class AppointmentDetailView(LoginRequiredMixin, View):
     def get(self, request, appointment_id):
         appointment_detail = Appointment.objects.get(pk=appointment_id)
         vehicle = appointment_detail.vehicle if appointment_detail.vehicle_id else None
@@ -94,7 +96,7 @@ class AppointmentDetailView(View):
             'description': appointment_detail.description or '-',
         })
 
-class AppointmentEditView(View):
+class AppointmentEditView(LoginRequiredMixin, View):
     def get(self, request, appointment_id):
         appointment = Appointment.objects.get(pk=appointment_id)
         form = AppointmentStatusForm(instance=appointment)
@@ -124,7 +126,7 @@ class AppointmentEditView(View):
             'selected_status': selected_status,
         })
 
-class VehicleListView(View):
+class VehicleListView(LoginRequiredMixin, View):
     def get(self, request):
         vehicles = (
             Vehicle.objects
@@ -148,7 +150,7 @@ class VehicleListView(View):
             'vehicles': vehicle_rows,
         })
 
-class ReviewListView(View):
+class ReviewListView(LoginRequiredMixin, View):
     def get(self, request):
         reviews = (
             Review.objects
@@ -172,7 +174,7 @@ class ReviewListView(View):
             'reviews': review_rows,
         })
 
-class ReviewDetailView(View):
+class ReviewDetailView(LoginRequiredMixin, View):
     def get(self, request, review_id):
         review = Review.objects.get(pk=review_id)
         appointment = review.appointment
