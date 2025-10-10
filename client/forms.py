@@ -98,6 +98,10 @@ class UserForm(UserChangeForm):
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
+
+        if not first_name or str(first_name).strip() == "":
+            raise ValidationError("First name is required.")
+
         # ต้องเป็นอักษรเท่านั้น และสามาระเป็นค่าว่างได้
         if first_name and not first_name.isalpha():
             raise ValidationError("First name must contain only letters.")
@@ -105,10 +109,22 @@ class UserForm(UserChangeForm):
 
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name')
+
+        if not last_name or str(last_name).strip() == "":
+            raise ValidationError("Last name is required.")
+
         # ต้องเป็นอักษรเท่านั้น และสามาระเป็นค่าว่างได้
         if last_name and not last_name.isalpha():
             raise ValidationError("Last name must contain only letters.")
         return last_name.capitalize()
+
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email or str(email).strip() == "":
+            raise ValidationError("Email is required.")
+        return email
+
 
 class ProfileForm(ModelForm):
     class Meta:
@@ -121,33 +137,26 @@ class ProfileForm(ModelForm):
         'placeholder': 'enter your phone number',
     }
 
-    phone_number = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs=base_attrs),
-    )
+    phone_number = forms.CharField(widget=forms.TextInput(attrs=base_attrs))
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
 
-        # Allow empty phone number
-        if phone_number is None:
-            return None
+        if not phone_number or str(phone_number).strip() == "":
+            raise ValidationError("Phone number is required.")
 
-        normalized = str(phone_number).strip()
-        if normalized in {"", "-", "null", "[null]"}:
-            return None
         # ต้องการแค่ pattern  0XXXXXXXXX นี้เท่านั้น
         pattern = r'^0\d{9}$'
-        if not re.match(pattern, normalized):
+        if not re.match(pattern, phone_number):
             raise ValidationError("Invalid phone number format.")
 
-        qs = Profile.objects.filter(phone_number=normalized)
+        qs = Profile.objects.filter(phone_number=phone_number)
         if self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
             raise ValidationError("This phone number already exists.")
 
-        return normalized
+        return phone_number
 
 class PasswordChangeForm(PasswordChangeForm):
     class Meta:
