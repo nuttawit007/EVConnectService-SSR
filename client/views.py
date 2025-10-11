@@ -18,6 +18,22 @@ class BookView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         form = BookingForm()
         form.fields['vehicle'].queryset = Vehicle.objects.filter(user=request.user)
+
+        # เลือกรถคันแรกเป็น default ถ้ามี
+        first_vehicle = form.fields['vehicle'].queryset.first()
+        default_vehicle = str(first_vehicle.pk) if first_vehicle else None
+        if first_vehicle:
+            form.initial['vehicle'] = first_vehicle.pk
+
+        # หา service ที่ชื่อ "Maintenance" จาก queryset ของฟิลด์ service_types
+        services_qs = form.fields['service_types'].queryset
+        maintenance = services_qs.filter(name__iexact='maintenance').first()
+        default_services = []
+        if maintenance:
+            # ตั้งค่า default เป็นรายการ id (สำหรับ ModelMultipleChoiceField)
+            form.initial['service_types'] = [maintenance.pk]
+            default_services = [str(maintenance.pk)]  # ให้เป็น string เพื่อจะเช็คใน template ได้ง่าย
+
         times_morning = ["8:00", "9:00", "10:00", "11:00"]
         times_afternoon = ["14:00", "15:00", "16:00", "17:00"]
         # ดึง slot ที่ถูกจองแล้วทั้งหมด
@@ -26,11 +42,15 @@ class BookView(LoginRequiredMixin, PermissionRequiredMixin, View):
         booked_slots_str = [
             f"{date.strftime('%Y-%m-%d')}_{time.strftime('%-H:%M')}" for date, time in booked_slots
         ]
+        print("Default vehicle:", default_vehicle)
+        print("Default services:", default_services)
         return render(request, 'book.html', {
             'form': form,
             'times_morning': times_morning,
             'times_afternoon': times_afternoon,
             'booked_slots': booked_slots_str if booked_slots_str else [],
+            'default_services': default_services,
+            'default_vehicle': default_vehicle,
         })
 
     def post(self, request):

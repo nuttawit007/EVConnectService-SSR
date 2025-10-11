@@ -14,26 +14,32 @@
         {{ form.non_field_errors }}
 
         <!-- Choose Vehicle & Add Vehicle -->
-        <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <div class="grid md:grid-cols-2 gap-8 mb-10">
             <!-- Choose Vehicle -->
-            <div>
-                <h2 class="text-2xl font-semibold mb-2">Choose Vehicle</h2>
-                <p class="text-slate-400 mb-4">Choose your EV vehicle</p>
-                <select name="vehicle" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 focus:outline-none focus:border-yellow-400 transition-colors">
-                    <option value="">choose your EV vehicle</option>
-                    {% for vehicle in form.fields.vehicle.queryset %}
-                        <option value="{{ vehicle.id }}">{{ vehicle.license_plate }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex gap-6">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Choose Vehicle <span class="text-yellow-400">*</span></h2>
+                    <p class="text-slate-400 mb-4">Choose your EV vehicle</p>
+                </div>
+                <div>
+                    <select name="vehicle" class="px-4 py-4 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 focus:outline-none focus:border-yellow-400 transition-colors">
+                        <option value="">choose your EV vehicle</option>
+                        {% for vehicle in form.fields.vehicle.queryset %}
+                            <option value="{{ vehicle.id }}" {% if default_vehicle and vehicle.id|stringformat:"s" == default_vehicle|stringformat:"s" %}selected{% endif %}>{{ vehicle.license_plate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="text-red-400 text-sm mt-2">
                     {{ form.vehicle.errors }}
                 </div>
             </div>
 
             <!-- Add Vehicle -->
-            <div>
-                <h2 class="text-2xl font-semibold mb-2">Add Vehicle (optional)</h2>
-                <p class="text-slate-400 mb-4">if you don't have EV vehicle</p>
+            <div class="flex gap-6">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Add Vehicle (optional)</h2>
+                    <p class="text-slate-400 mb-4">if you don't have EV vehicle</p>
+                </div>
                 <a href="{% url 'add_vehicle' %}">
                     <button type="button" class="px-6 py-3 border-2 border-slate-400 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors">
                         Add new vehicle
@@ -42,44 +48,45 @@
             </div>
         </div>
 
-        <!-- Choose Service -->
-        <div class="mb-12">
-            <h2 class="text-2xl font-semibold mb-2">Choose Service</h2>
-            <p class="text-slate-400 mb-6">Choose the service you need</p>
-
-            <div class="grid md:grid-cols-4 gap-4">
-                {% for service in form.fields.service_types.queryset %}
-                    <label class="relative cursor-pointer group">
-                        <input type="checkbox" name="service_types" value="{{ service.id }}" class="peer sr-only">
-                        <div class="p-6 bg-slate-800 border-2 border-slate-700 rounded-xl peer-checked:border-yellow-400 transition-colors">
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="w-5 h-5 flex items-center justify-center border-2 rounded border-slate-500 bg-slate-900 transition-all peer-checked:border-yellow-400">
-                                </span>
-                                <h3 class="font-semibold">{{ service.name }}</h3>
+        <div class="flex justify-between gap-12 mb-10">
+            <!-- Choose Service -->
+            <div class="flex-1">
+                <h2 class="text-2xl font-semibold mb-2">Choose Service  <span class="text-yellow-400">*</span></h2>
+                <p class="text-slate-400 mb-6">Choose the service you need</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    {% for service in form.fields.service_types.queryset %}
+                        <label class="relative cursor-pointer group">
+                            <input type="checkbox" name="service_types" value="{{ service.id }}" class="peer sr-only" {% if default_services and service.id|stringformat:"s" in default_services %}checked{% endif %}>
+                            <div class="p-6 bg-slate-800 border-2 border-slate-700 rounded-xl peer-checked:border-yellow-400 transition-colors">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="w-5 h-5 flex items-center justify-center border-2 rounded border-slate-500 bg-slate-900 transition-all peer-checked:border-yellow-400">
+                                    </span>
+                                    <h3 class="font-semibold">{{ service.name }}</h3>
+                                </div>
+                                <p class="text-sm text-yellow-400">{{ service.description }}</p>
                             </div>
-                            <p class="text-sm text-yellow-400">{{ service.description }}</p>
-                        </div>
-                    </label>
-                {% endfor %}
+                        </label>
+                    {% endfor %}
+                </div>
+                <div class="text-red-400 text-sm mt-2">
+                    {{ form.service_types.errors }}
+                </div>
             </div>
-            <div class="text-red-400 text-sm mt-2">
-                {{ form.service_types.errors }}
-            </div>
-        </div>
-
-        <!-- Description -->
-        <div class="mb-12">
-            <h2 class="text-2xl font-semibold mb-2">Description</h2>
-            <p class="text-slate-400 mb-4">Add notes or special requests for your appointment.</p>
-            {{ form.description }}
-            <div class="text-red-400 text-sm mt-2">
-                {{ form.description.errors }}
+    
+            <!-- Description -->
+            <div class="flex-1">
+                <h2 class="text-2xl font-semibold mb-2">Description</h2>
+                <p class="text-slate-400 mb-4">Add notes or special requests for your appointment.</p>
+                {{ form.description }}
+                <div class="text-red-400 text-sm mt-2">
+                    {{ form.description.errors }}
+                </div>
             </div>
         </div>
 
         <!-- Date and Time -->
         <div class="mb-12">
-            <h2 class="text-2xl font-semibold mb-2">Date and Time</h2>
+            <h2 class="text-2xl font-semibold mb-2">Choose Date and Time  <span class="text-yellow-400">*</span></h2>
             <p class="text-slate-400 mb-6">Select date and time you need.</p>
 
             <div class="grid md:grid-cols-2 gap-6">

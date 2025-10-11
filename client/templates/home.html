@@ -8,7 +8,7 @@
         EV Connect Service is a smart platform that simplifies EV service bookings and enhances customer experience.
     </p>
     <a href="{% url 'book' %}" class="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold rounded-xl text-xl transition-colors">
-        Book an Appointment
+        Booking an Appointment
     </a>
 </section>
 
@@ -20,30 +20,39 @@
         <p class="text-lg text-gray-400">All essential EV services in one place, ready to book.</p>
     </div>
     <!-- Service list -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
-            <h3 class="text-2xl font-bold mb-4">Maintenance</h3>
-            <p class="text-yellow-400 text-sm leading-relaxed">
-                บริการเช็กระยะ ดูแลรถตามกำหนด<br>เพื่อให้รถทุกคนพร้อมใช้งานเสมอ
-            </p>
-        </div>
-        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
-            <h3 class="text-2xl font-bold mb-4">Repair</h3>
-            <p class="text-yellow-400 text-sm leading-relaxed">
-                ซ่อมแบบมืบมืบทุกรถทุกปัญหาระทุก<br>โดยทีมช่างผู้เชี่ยวชาญ
-            </p>
-        </div>
-        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
-            <h3 class="text-2xl font-bold mb-4">Warranty & Insurance</h3>
-            <p class="text-yellow-400 text-sm leading-relaxed">
-                รองรับงานเคลมตามประกัน<br>และบริการรอบด้านตามกรมธรรม์ที่
-            </p>
-        </div>
-        <div class="bg-slate-800 rounded-3xl p-8 hover:bg-slate-750 transition-colors">
-            <h3 class="text-2xl font-bold mb-4">Other</h3>
-            <p class="text-yellow-400 text-sm leading-relaxed">
-                บริการเสริม เช่น ล้างรถ ดูแลเบื้อต้น<br>อันโดดเด่นพิเศษ และอื่น ๆ
-            </p>
+    <div class="max-w-7xl mx-auto">
+        <!-- outer card to make it look like one block -->
+        <div class="bg-slate-900 border-2 border-slate-700 rounded-lg overflow-hidden shadow-sm">
+            <!-- grid: mobile 1 column (with horizontal dividers), md+ 4 columns with vertical dividers -->
+            <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-700">
+                <div class="p-8 flex flex-col gap-3 items-start hover:bg-slate-750 transition-colors">
+                    <h3 class="text-2xl font-bold mb-1">Maintenance</h3>
+                    <p class="text-yellow-400 text-sm leading-relaxed">
+                        บริการเช็กระยะ ดูแลรถตามกำหนด เพื่อให้รถทุกคนพร้อมใช้งานเสมอ
+                    </p>
+                </div>
+
+                <div class="p-8 flex flex-col gap-3 items-start hover:bg-slate-750 transition-colors">
+                    <h3 class="text-2xl font-bold mb-1">Repair</h3>
+                    <p class="text-yellow-400 text-sm leading-relaxed">
+                        ซ่อมแบบมืออาชีพสำหรับทุกปัญหา โดยทีมช่างผู้เชี่ยวชาญ
+                    </p>
+                </div>
+
+                <div class="p-8 flex flex-col gap-3 items-start hover:bg-slate-750 transition-colors">
+                    <h3 class="text-2xl font-bold mb-1">Warranty & Insurance</h3>
+                    <p class="text-yellow-400 text-sm leading-relaxed">
+                        รองรับงานเคลมตามประกัน และบริการรอบด้านตามกรมธรรม์ที่เกี่ยวข้อง
+                    </p>
+                </div>
+
+                <div class="p-8 flex flex-col gap-3 items-start hover:bg-slate-750 transition-colors">
+                    <h3 class="text-2xl font-bold mb-1">Other</h3>
+                    <p class="text-yellow-400 text-sm leading-relaxed">
+                        บริการเสริม เช่น ล้างรถ ดูแลเบื้องต้น และบริการพิเศษอื่น ๆ
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </section>

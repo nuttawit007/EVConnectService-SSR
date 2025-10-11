@@ -25,16 +25,23 @@
             </div>
             <!-- menu bar -->
             <div class="space-x-6">
-                <a href="{% url 'book' %}" class="{% if request.path == '/client/book/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors">Booking</a>
-                <a href="{% url 'appointment' %}" class="{% if request.path == '/client/appointment/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors">Appointments</a>
-                <a href="{% url 'vehicle' %}" class="{% if request.path == '/client/vehicle/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors ">Vehicles</a>
+                <a href="{% url 'book' %}" class="{% if request.path == '/client/book/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl text-xl transition-colors">Booking</a>
+                <a href="{% url 'appointment' %}" class="{% if request.path == '/client/appointment/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl text-xl transition-colors">My Appointments</a>
+                <a href="{% url 'vehicle' %}" class="{% if request.path == '/client/vehicle/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl text-xl transition-colors ">My Vehicles</a>
             </div>
             <!-- login button -->
             <div>
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="{% if request.path == '/client/profile/' %}active{% endif %} px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors ">
-                        {{ request.user.username|default:"Profile" }}
-                    </a>
+                    <a href="{% url 'profile' %}"
+                        class="{% if request.path == '/client/profile/' %}active{% endif %} pl-6 pr-8 py-3 bg-slate-800 hover:bg-slate-700/70 text-white rounded-3xl text-xl transition-colors flex items-center gap-3">
+                            <!-- user icon -->
+                            <span class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.7-9.8 5v1.5c0 .6.4 1 1 1h17.6c.6 0 1-.4 1-1V19.4c0-3.3-6.5-5-9.8-5z"/>
+                                </svg>
+                            </span>
+                            <span>{{ request.user.username }}</span>
+                        </a>
                 {% else %}
                     <a href="{% url 'login' %}" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xl transition-colors ">
                         Login
