@@ -52,15 +52,13 @@
             <!-- Choose Service -->
             <div class="flex-1">
                 <h2 class="text-2xl font-semibold mb-2">Choose Service  <span class="text-yellow-400">*</span></h2>
-                <p class="text-slate-400 mb-6">Choose the service you need</p>
+                <p class="text-slate-400 mb-6">Choose the service you need 1 or more</p>
                 <div class="grid md:grid-cols-2 gap-4">
                     {% for service in form.fields.service_types.queryset %}
                         <label class="relative cursor-pointer group">
                             <input type="checkbox" name="service_types" value="{{ service.id }}" class="peer sr-only" {% if default_services and service.id|stringformat:"s" in default_services %}checked{% endif %}>
                             <div class="p-6 bg-slate-800 border-2 border-slate-700 rounded-xl peer-checked:border-yellow-400 transition-colors">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <span class="w-5 h-5 flex items-center justify-center border-2 rounded border-slate-500 bg-slate-900 transition-all peer-checked:border-yellow-400">
-                                    </span>
+                                <div class="flex items-center gap-3 mb-2">                                
                                     <h3 class="font-semibold">{{ service.name }}</h3>
                                 </div>
                                 <p class="text-sm text-yellow-400">{{ service.description }}</p>
@@ -139,10 +137,7 @@
                                 {% for time in times_morning %}
                                 <label class="relative cursor-pointer time-label">
                                     <input type="radio" name="time" value="{{ time }}" class="peer sr-only time-radio">
-                                    <div class="px-4 py-2.5 bg-slate-800 border-2 border-slate-700 rounded-lg peer-checked:border-yellow-400 transition-colors flex items-center gap-3">
-                                        <div class="w-5 h-5 rounded-full border-2 border-slate-500 peer-checked:border-yellow-400 peer-checked:bg-yellow-400 flex items-center justify-center transition-colors">
-                                            <div class="w-2.5 h-2.5 bg-slate-900 rounded-full"></div>
-                                        </div>
+                                    <div class="px-4 py-2.5 bg-slate-800 border-2 border-slate-700 rounded-lg peer-checked:border-yellow-400 transition-colors flex items-center gap-3">                                        
                                         <span>{{ time }}</span>
                                     </div>
                                 </label>
@@ -157,10 +152,7 @@
                                 {% for time in times_afternoon %}
                                 <label class="relative cursor-pointer time-label">
                                     <input type="radio" name="time" value="{{ time }}" class="peer sr-only time-radio">
-                                    <div class="px-4 py-2.5 bg-slate-800 border-2 border-slate-700 rounded-lg peer-checked:border-yellow-400 transition-colors flex items-center gap-3">
-                                        <div class="w-5 h-5 rounded-full border-2 border-slate-500 peer-checked:border-yellow-400 peer-checked:bg-yellow-400 flex items-center justify-center transition-colors">
-                                            <div class="w-2.5 h-2.5 bg-slate-900 rounded-full"></div>
-                                        </div>
+                                    <div class="px-4 py-2.5 bg-slate-800 border-2 border-slate-700 rounded-lg peer-checked:border-yellow-400 transition-colors flex items-center gap-3">                                        
                                         <span>{{ time }}</span>
                                     </div>
                                 </label>
@@ -177,7 +169,7 @@
 
         <!-- Confirm Button -->
         <div class="flex justify-end">
-            <button type="submit" class="px-8 py-3 bg-yellow-400 text-slate-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors">
+            <button type="submit" class="px-8 py-3 bg-yellow-400 text-slate-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors cursor-pointer">
                 confirm booking
             </button>
         </div>

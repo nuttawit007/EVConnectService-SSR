@@ -8,6 +8,8 @@ urlpatterns = [
     path('book/', views.BookView.as_view(), name='book'),
     # ex: /client/appointment/
     path('appointment/', views.AppointmentView.as_view(), name='appointment'),
+    # ex: /client/appointment/1/delete
+    path('appointment/<int:appointment_id>/delete/', views.AppointmentDeleteView.as_view(), name='appointment_delete'),
     # ex: /client/appointment/1/review
     path('appointment/<int:appointment_id>/review/', views.ReviewView.as_view(), name='review'),
     # ex: /client/vehicle/

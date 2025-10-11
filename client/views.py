@@ -100,6 +100,15 @@ class AppointmentView(LoginRequiredMixin, PermissionRequiredMixin, View):
         print(appointment_rows)
         return render(request, 'appointment.html', {'appointments' : appointment_rows})
 
+class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['client.access_appointment_page', 'client.delete_appointmentclient']
+
+    def post(self, request, appointment_id):
+        appointment = Appointment.objects.get(pk=appointment_id)
+        print(appointment)
+        appointment.delete()
+        return redirect('appointment')
+
 class ReviewView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ['client.access_review_page']
 

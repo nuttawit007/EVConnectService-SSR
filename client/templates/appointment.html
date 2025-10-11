@@ -17,52 +17,89 @@
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Date & Time</th>
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Status</th>
                 <th class="text-left px-8 py-4 font-medium text-slate-300">Review</th>
+                <th class="text-left px-8 py-4 font-medium text-slate-300">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for ap in appointments %}
                 <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors {% if ap.status|upper == 'REJECT' %} text-red-400 {% else %} text-white {% endif %}">
-                    <td class="px-8 py-5">{{ap.license_plate}}</td>
-                    <td class="px-8 py-5">{{ap.service}}</td>
-                    <td class="px-8 py-5">{{ap.date_time}}</td>
-                    <td class="px-8 py-5">
-                        {% if ap.status|upper == 'PENDING'%}
-                            <span class="inline-block px-5 py-1.5 bg-gray-200 border-3 border-gray-600 rounded-full text-sm font-medium text-slate-900 ">
-                                {{ap.status}}
-                            </span>
-                        {% elif ap.status|upper == 'IN-PROGRESS' %}
-                            <span class="inline-block px-5 py-1.5 bg-yellow-200 border-3 border-yellow-600 text-slate-900 rounded-full text-sm font-medium">
-                                {{ap.status}}
-                            </span>
-                        {% elif ap.status|upper == 'DONE' %}
-                            <span class="inline-block px-5 py-1.5 bg-green-200 border-3 border-green-600 text-slate-900 rounded-full text-sm font-medium">
-                                {{ap.status}}
-                            </span>
-                        {% elif ap.status|upper == 'REJECT' %}
-                            <span class="inline-block px-5 py-1.5 bg-red-200 border-3 border-red-600 text-slate-900 rounded-full text-sm font-medium">
-                                {{ap.status}}
-                            </span>
-                        {% endif %}
+                    <!-- License plate: ให้คงอยู่ในบรรทัดเดียว -->
+                    <td class="px-8 py-5 whitespace-nowrap">{{ ap.license_plate }}</td>
+
+                    <!-- Service: อนุญาตให้ขึ้นบรรทัดใหม่ได้ (wrap) -->
+                    <td class="px-8 py-5 whitespace-normal break-words max-w-xs">{{ ap.service }}</td>
+
+                    <!-- Date & Time: single line -->
+                    <td class="px-8 py-5 whitespace-nowrap">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm">{{ ap.date_time }}</span>
+                        </div>
                     </td>
-                    <td class="px-8 py-5">
-                        {% if ap.status|upper == 'DONE' and ap.review_score != None %}
-                        <a>
-                            <button class="px-6 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-full font-medium transition-colors">
-                                {{ap.review_score}} point
-                            </button>
-                        </a>
-                        {% elif ap.status|upper == 'DONE' and ap.review_score == None %}
-                            <a href="{% url 'review' appointment_id=ap.id %}">
-                                <button class="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full transition-colors cursor-pointer">
-                                    review
+
+                    <!-- Status: badge inline, single line -->
+                    <td class="px-8 py-5 whitespace-nowrap">
+                        <div class="inline-flex items-center">
+                            {% if ap.status|upper == 'PENDING'%}
+                                <span class="inline-block px-5 py-1.5 bg-gray-200 border-3 border-gray-600 rounded-full text-sm font-medium text-slate-900">
+                                    {{ap.status}}
+                                </span>
+                            {% elif ap.status|upper == 'IN-PROGRESS' %}
+                                <span class="inline-block px-5 py-1.5 bg-yellow-200 border-3 border-yellow-600 text-slate-900 rounded-full text-sm font-medium">
+                                    {{ap.status}}
+                                </span>
+                            {% elif ap.status|upper == 'DONE' %}
+                                <span class="inline-block px-5 py-1.5 bg-green-200 border-3 border-green-600 text-slate-900 rounded-full text-sm font-medium">
+                                    {{ap.status}}
+                                </span>
+                            {% elif ap.status|upper == 'REJECT' %}
+                                <span class="inline-block px-5 py-1.5 bg-red-200 border-3 border-red-600 text-slate-900 rounded-full text-sm font-medium">
+                                    {{ap.status}}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+
+                    <!-- Review: inline button/text -->
+                    <td class="px-8 py-5 whitespace-nowrap">
+                        <div class="inline-flex items-center gap-2 whitespace-nowrap">
+                            {% if ap.status|upper == 'DONE' and ap.review_score != None %}
+                                <button class="px-6 py-2 text-yellow-400 rounded-full font-medium transition-colors">
+                                    {{ap.review_score}} point
                                 </button>
-                            </a>
-                        {% else %}
-                            -
-                        {% endif %}
+                            {% elif ap.status|upper == 'DONE' and ap.review_score == None %}
+                                <a href="{% url 'review' appointment_id=ap.id %}">
+                                    <button class="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 rounded-full transition-colors cursor-pointer">
+                                        review
+                                    </button>
+                                </a>
+                            {% else %}
+                                <button class="px-6 py-2 bg-gray-800 text-white rounded-full transition-colors cursor-not-allowed" disabled>
+                                    -
+                                </button>
+                            {% endif %}
+                        </div>
+                    </td>
+
+                    <!-- Actions (Cancel) keep single line -->
+                    <td class="px-8 py-5 whitespace-nowrap">
+                        <div class="inline-flex gap-2 whitespace-nowrap">
+                            {% if ap.status|upper == 'PENDING' %}
+                                <form action="{% url 'appointment_delete' appointment_id=ap.id %}" method="POST" class="inline">
+                                    {% csrf_token %}
+                                    <button class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-full font-medium transition-colors cursor-pointer">
+                                        Cancel
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button class="px-6 py-2 bg-gray-800 text-white rounded-full font-medium transition-colors cursor-not-allowed" disabled>
+                                    -
+                                </button>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
+        </tbody>
         </tbody>
     </table>
 </div>
