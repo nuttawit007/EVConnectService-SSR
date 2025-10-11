@@ -125,7 +125,7 @@ class VehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'vehicle.html', {'vehicles' : vehicles})
 
 class AddVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['client.access_vehicle_page', 'client.add_vehicle']
+    permission_required = ['client.access_vehicle_page']
 
     def get(self, request):
         form = VehicleForm()
@@ -141,7 +141,7 @@ class AddVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'add_vehicle.html', {'form' : form})
 
 class EditVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['client.access_vehicle_page', 'client.change_vehicle']
+    permission_required = ['client.access_vehicle_page', 'client.change_vehicleclient']
     def get(self, request, vehicle_id):
         vehicle = Vehicle.objects.get(pk=vehicle_id)
         form = VehicleForm(instance=vehicle)
@@ -158,7 +158,7 @@ class EditVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'edit_vehicle.html', {'form': form, 'vehicle_id': vehicle_id})
 
 class DeleteVehicleView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['client.access_vehicle_page', 'client.delete_vehicle']
+    permission_required = ['client.access_vehicle_page', 'client.delete_vehicleclient']
 
     def post(self, request, vehicle_id):
         vehicle = Vehicle.objects.get(pk=vehicle_id)
@@ -192,7 +192,7 @@ class ProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
         )
 
 class EditProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['client.access_profile_page', 'client.change_profile']
+    permission_required = ['client.access_profile_page', 'client.change_profileclient']
 
     def get(self, request):
         if not request.user.is_authenticated:
@@ -219,7 +219,7 @@ class EditProfileView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'edit_profile.html', {'form_user': form_user, 'form_profile': form_profile})
 
 class PasswordChangeView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['client.access_profile_page', 'client.change_profile']
+    permission_required = ['client.access_profile_page', 'client.change_profileclient']
 
     def get(self, request):
         if not request.user.is_authenticated:
