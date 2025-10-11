@@ -38,6 +38,8 @@ class BookView(LoginRequiredMixin, PermissionRequiredMixin, View):
         times_afternoon = ["14:00", "15:00", "16:00", "17:00"]
         # ดึง slot ที่ถูกจองแล้วทั้งหมด
         booked_slots = list(Appointment.objects.values_list('date', 'time'))
+        booked_slots_qs = Appointment.objects.exclude(status__iexact='reject').values_list('date', 'time')
+        booked_slots = list(booked_slots_qs)
         # แปลงเป็น string เพื่อใช้ใน JS
         booked_slots_str = [
             f"{date.strftime('%Y-%m-%d')}_{time.strftime('%-H:%M')}" for date, time in booked_slots

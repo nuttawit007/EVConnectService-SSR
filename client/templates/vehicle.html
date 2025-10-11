@@ -24,13 +24,13 @@
                 <h2 class="text-3xl font-bold">{{vehicle.license_plate}}</h2>
                 <div class="flex gap-3">
                     <a  href="{% url 'edit_vehicle' vehicle.id %}">
-                        <button class="px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors">
+                        <button class="px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors cursor-pointer">
                             edit
                         </button>
                     </a>
                     <form method="POST" action="{% url 'delete_vehicle' vehicle_id=vehicle.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg font-medium transition-colors">
+                        <button type="submit" class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg font-medium transition-colors cursor-pointer">
                             delete
                         </button>
                     </form>

@@ -26,27 +26,41 @@ class VehicleForm(ModelForm):
     def clean_license_plate(self):
         license_plate = self.cleaned_data.get('license_plate')
 
-        # Convert to uppercase for consistency
-        license_plate = license_plate.upper()
+        # ใช้ช่วง Unicode \u0E00-\u0E7F เพื่อครอบคลุมสระและเครื่องหมายต่าง ๆ ของภาษาไทย
+        # อนุญาตตัวอักษรไทย (รวมสระ/วรรณยุกต์), ตัวเลข และช่องว่างภายในข้อความ
+        if not re.match(r'^[\u0E00-\u0E7F0-9 ]+$', license_plate):
+            raise ValidationError("License plate must contain only Thai characters and numbers.")
 
-        # Pattern 1: 'SS NNNN' (S=2 letters, N=1-4 digits, first digit not 0)
-        pattern1 = r'^[ก-ฮ]{2} [1-9]\d{0,3}$'
-        # Pattern 2: 'N SS NNNN' (N=1 digit, S=2 letters, N=1-4 digits, first digit not 0)
-        pattern2 = r'^\d{1} [ก-ฮ]{2} [1-9]\d{0,3}$'
+        # Normalize แบบไม่มีช่องว่าง เพื่อใช้ตรวจซ้ำ
+        normalized_in = re.sub(r'\s+', '', license_plate).lower()
 
-        if not (re.match(pattern1, license_plate) or re.match(pattern2, license_plate)):
-            raise ValidationError(
-                "Invalid license plate format."
-            )
-
-        # ตรวจสอบทะเบียนซ้ำ (ยกเว้นทะเบียนของ instance เดิม)
-        qs = Vehicle.objects.filter(license_plate__iexact=license_plate)
+        qs = Vehicle.objects.all()
         if self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise ValidationError("This license plate already exists.")
+
+        for v in qs:
+            existing = (v.license_plate or '')
+            normalized_existing = re.sub(r'\s+', '', existing).lower()
+            if normalized_existing == normalized_in:
+                raise ValidationError("This license plate already exists.")
 
         return license_plate
+
+    def clean_brand(self):
+            brand = self.cleaned_data.get('brand')
+            # อนุญาติเฉพาะ อักษรอังกฤษ ตัวเลข และช่องว่าง
+            if not re.match(r'^[a-zA-Z0-9 ]+$', brand):
+                raise ValidationError("Brand must contain only English letters, numbers.")
+
+            return brand.capitalize()
+
+    def clean_model(self):
+            model = self.cleaned_data.get('model')
+            # อนุญาติเฉพาะ อักษรอังกฤษ ตัวเลข และช่องว่าง
+            if not re.match(r'^[a-zA-Z0-9 ]+$', model):
+                raise ValidationError("Model must contain only English letters, numbers.")
+
+            return model.capitalize()
 
 class BookingForm(ModelForm):
     class Meta:
