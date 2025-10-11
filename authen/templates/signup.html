@@ -38,7 +38,7 @@
             </div>
         {% endif %}
         <!-- Signup Form -->
-        <form method="POST" action="{% url 'signup' %}"  class="space-y-6">
+        <form method="POST" action="{% url 'signup' %}"  class="space-y-3">
             {% csrf_token %}
             <!-- Username -->
             <div>
@@ -89,26 +89,52 @@
                 <!-- Password -->
                 <div>
                     <label for="password1" class="block text-white text-lg mb-3">password</label>
-                    <input 
-                        type="password" 
-                        id="password1" 
-                        name="password1" 
-                        placeholder="enter your password"
-                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                        required
-                    >
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password1" 
+                            name="password1" 
+                            placeholder="enter your password"
+                            class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                            required
+                        >
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 focus:outline-none cursor-pointer" data-target="#password1" aria-label="Toggle password visibility">
+                            <svg class="w-5 h-5 eye-open hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="w-5 h-5 eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6 0-10-7-10-7a18.24 18.24 0 0 1 5.06-6.06"></path>
+                                <path d="M1 1l22 22"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-slate-400 text-sm mt-2 pl-3">Hint : Use at least 8 characters</p>
                 </div>
                 <!-- Password Confirmation -->
                 <div>
                     <label for="password2" class="block text-white text-lg mb-3">confirm password</label>
-                    <input 
-                        type="password" 
-                        id="password2" 
-                        name="password2" 
-                        placeholder="confirm your password"
-                        class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
-                        required
-                    >
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password2" 
+                            name="password2" 
+                            placeholder="confirm your password"
+                            class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
+                            required
+                        >
+                        <!-- เพิ่มปุ่มลูกตา สำหรับช่อง confirm -->
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 focus:outline-none cursor-pointer" data-target="#password2" aria-label="Toggle password visibility">
+                            <svg class="w-5 h-5 eye-open hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="w-5 h-5 eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6 0-10-7-10-7a18.24 18.24 0 0 1 5.06-6.06"></path>
+                                <path d="M1 1l22 22"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -126,6 +152,7 @@
                         value="{{ signup_form.data.email|default_if_none:'' }}"
                         required
                     >
+                    <p class="text-slate-400 text-sm mt-2 pl-3">Ex : user@example.com</p>
                 </div>
                 <!-- Phone number -->
                 <div>
@@ -135,10 +162,12 @@
                         id="phone_number" 
                         name="phone_number" 
                         placeholder="enter your phone number"
+                        maxlength="10"
                         class="w-full px-6 py-3 bg-slate-700 text-slate-300 placeholder-slate-500 rounded-xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition-colors"
                         value="{{ profile_form.data.phone_number|default_if_none:'' }}"
                         required
                     >
+                    <p class="text-slate-400 text-sm mt-2 pl-3">Ex : 0123456789</p>
                 </div>
             </div>
             <!-- Signup Button -->
@@ -155,6 +184,28 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.querySelectorAll('button[data-target]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selector = btn.getAttribute('data-target');
+                const target = document.querySelector(selector);
+                if (!target) return;
+                const openIcon = btn.querySelector('.eye-open');
+                const closedIcon = btn.querySelector('.eye-closed');
+
+                if (target.type === 'password') {
+                    target.type = 'text';
+                    if (openIcon) openIcon.classList.remove('hidden');  // show open
+                    if (closedIcon) closedIcon.classList.add('hidden');  // hide closed
+                } else {
+                    target.type = 'password';
+                    if (openIcon) openIcon.classList.add('hidden');      // hide open
+                    if (closedIcon) closedIcon.classList.remove('hidden'); // show closed
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
