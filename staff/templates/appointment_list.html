@@ -11,29 +11,37 @@
         </div>
 
         <!-- Filter Controls -->
-        <div class="flex items-center gap-4">
-            <!-- License Plate Search -->
-            <div>
-                <label class="block text-sm text-slate-400 mb-2">License plate</label>
-                <input 
-                    type="text" 
-                    placeholder="Search license..." 
-                    class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-yellow-400 transition-colors w-64"
-                >
-            </div>
+        <form method="GET">
+            <div class="flex items-end gap-4">
+                <!-- Date Time Search -->
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Date</label>
+                    <input
+                        type="date"
+                        name="date"
+                        value="{{ filter_date|default:'' }}"
+                        placeholder="Search date"
+                        class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-yellow-400 transition-colors w-64"
+                    >
+                </div>
+    
+                <!-- Status Filter -->
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Status</label>
+                    <select name="status" class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-400 transition-colors w-48 appearance-none cursor-pointer">
+                        <option value="">All statuses</option>
+                        <option value="pending" {% if filter_status == 'pending' %}selected{% endif %}>pending</option>
+                        <option value="in-progress" {% if filter_status == 'in-progress' %}selected{% endif %}>in-progress</option>
+                        <option value="done" {% if filter_status == 'done' %}selected{% endif %}>done</option>
+                        <option value="reject" {% if filter_status == 'reject' %}selected{% endif %}>reject</option>
+                    </select>
+                </div>
 
-            <!-- Status Filter -->
-            <div>
-                <label class="block text-sm text-slate-400 mb-2">Status</label>
-                <select class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-400 transition-colors w-48 appearance-none cursor-pointer">
-                    <option>Choose status</option>
-                    <option>pending</option>
-                    <option>in-progress</option>
-                    <option>done</option>
-                    <option>reject</option>
-                </select>
+                <div class="flex items-end">
+                    <button type="submit" class="px-6 py-3 bg-yellow-400 text-slate-900 rounded-lg cursor-pointer">Filter</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     {% if messages %}

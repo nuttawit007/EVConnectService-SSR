@@ -60,6 +60,13 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request):
         appointments =  Appointment.objects.all().order_by('-date', '-time')
+        filter_date = request.GET.get('date')
+        filter_status = request.GET.get('status')
+
+        if filter_date:
+            appointments = appointments.filter(date=filter_date)
+        if filter_status:
+            appointments = appointments.filter(status__iexact=filter_status)
 
         appointment_rows = []
         for idx, appointment in enumerate(appointments, start=1):
@@ -75,9 +82,12 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': status_raw,
             })
 
+
         return render(request, 'appointment_list.html', {
             'total_appointments': appointments.count(),
             'appointments': appointment_rows,
+            'filter_date': filter_date,
+            'filter_status': filter_status,
         })
 
 class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
