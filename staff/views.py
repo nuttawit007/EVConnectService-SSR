@@ -185,11 +185,13 @@ class ReviewListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ['staff.access_review_page', 'staff.view_review']
 
     def get(self, request):
-        reviews = (
-            Review.objects
-            .select_related('appointment__vehicle', 'appointment__user')
-            .order_by('id')
-        )
+        reviews = Review.objects.all().order_by('id')
+
+        filter_score = request.GET.get('score')
+        if filter_score:
+            reviews = reviews.filter(score=int(filter_score))
+        print(filter_score)
+
         review_rows = []
         for idx, review in enumerate(reviews, start=1):
             appointment = review.appointment
@@ -205,6 +207,7 @@ class ReviewListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'review_list.html', {
             'total_reviews': reviews.count(),
             'reviews': review_rows,
+            'filter_score': filter_score,
         })
 
 class ReviewDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):

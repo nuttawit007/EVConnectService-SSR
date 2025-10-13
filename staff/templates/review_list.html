@@ -3,9 +3,31 @@
 {% block content %}
 <main class="container mx-auto px-6 py-12">
     <!-- Page Title  -->
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold mb-2">Reviews</h1>
-        <p class="text-slate-400 text-lg">Total {{ total_reviews }} reviews</p>
+    <div class="flex items-start justify-between mb-8">
+        <div>
+            <h1 class="text-4xl font-bold mb-2">Reviews</h1>
+            <p class="text-slate-400 text-lg">Total {{ total_reviews }} reviews</p>
+        </div>
+        <!-- Filter Controls -->
+        <form method="GET">
+            <div class="flex items-end gap-4">
+                <!-- Score Filter -->
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Score</label>
+                    <select name="score" class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-400 transition-colors w-48 appearance-none cursor-pointer">
+                        <option value="">All scores</option>
+                        <option value="1" {% if filter_score == '1' %}selected{% endif %}>1</option>
+                        <option value="2" {% if filter_score == '2' %}selected{% endif %}>2</option>
+                        <option value="3" {% if filter_score == '3' %}selected{% endif %}>3</option>
+                        <option value="4" {% if filter_score == '4' %}selected{% endif %}>4</option>
+                        <option value="5" {% if filter_score == '5' %}selected{% endif %}>5</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="px-6 py-3 bg-yellow-400 text-slate-900 rounded-lg cursor-pointer">Filter</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <!-- Reviews Table  -->
