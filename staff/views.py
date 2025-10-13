@@ -9,9 +9,11 @@ from django.views import View
 
 from core.models import Appointment, Vehicle, Review
 
-from staff.forms import AppointmentStatusForm
-
+from staff.forms import AppointmentStatusForm, EmailForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -288,3 +290,52 @@ class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
         user.delete()
         messages.success(request, f"User (username: {username}) deleted successfully.")
         return redirect('user_list')
+
+class SendEmailView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['staff.access_user_page', 'auth.view_user']
+
+    def get(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+        email = user.email
+
+        if not email:
+            messages.error(request, f"User (username: {user.username}) does not have an email address.")
+            return redirect('user_detail', user_id=user.id)
+
+        form = EmailForm()
+        
+        return render(request, 'send_email.html', {
+            'user': user,
+            'email': email,
+            'form': form,
+        })
+
+    def post(self, request, user_id):
+
+        user = User.objects.get(pk=user_id)
+        email = user.email
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        if not email:
+            messages.error(request, f"User (username: {user.username}) does not have an email address.")
+            return redirect('detail_user_list', user_id=user.id)
+
+        if not subject or not message:
+            messages.error(request, "Subject and message cannot be empty.")
+            return redirect('send_user_email', user_id=user.id)
+
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            print('send email success')
+            messages.success(request, f"Email sent to {user.email} successfully.")
+        except Exception as e:
+            messages.error(request, f"Failed to send email: {str(e)}")
+
+        return redirect('send_user_email', user_id=user.id)

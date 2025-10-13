@@ -65,9 +65,9 @@
                     Back
                 </button>
             </a>
-            <a href="{% url 'user_list' %}" class="px-6 py-3 bg-green-400 hover:bg-green-500 text-slate-900 rounded-lg font-medium transition-colors cursor-pointer">
+            <a href="{% url 'send_user_email' user_id=user.id %}" class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-slate-900 rounded-lg font-medium transition-colors cursor-pointer">
                 <button>
-                    Send email to user
+                    Email to user
                 </button>
             </a>
         </div>

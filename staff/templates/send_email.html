@@ -1,0 +1,77 @@
+{% extends 'base_staff.html' %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="text-center mb-10 mt-12 relative">
+    <h1 class="text-4xl font-bold mb-3">Send Email to user</h1>
+    <p class="text-slate-400">Compose your message below</p>
+    <!-- Page Header -->
+</div>
+
+<section>
+    
+    <form method="POST"  action="{% url 'send_user_email' user_id=user.id %}" >
+        {% csrf_token %}
+        <div class="bg-slate-800 rounded-3xl px-12 py-8 max-w-3xl mx-auto">
+            {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                        <div class="rounded-xl border border-emerald-500 bg-emerald-950/70 px-6 py-3 text-sm text-emerald-200">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if errors %}
+                <div class="mb-6 space-y-3">
+                    {% for field, messages in errors.items %}
+                        <div class="rounded-xl border border-red-500 bg-red-950/70 px-6 py-3 text-sm text-red-200">
+                            <strong>{{ field }}:</strong> {{ messages|join:", " }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="flex justify-between gap-4">
+                <!-- Email Field -->
+                <div class='flex items-center gap-4 mb-8'>
+                    <label class="text-white text-lg mb-3 whitespace-nowrap">Email to :</label>
+                    <input 
+                        type="email" 
+                        value="{{ user.email }}" 
+                        readonly
+                        class="w-full px-6 py-3 bg-slate-700 text-slate-400 rounded-xl focus:outline-none cursor-not-allowed">
+                </div>
+                <!-- Username Field -->
+                <div class='flex items-center gap-4 mb-8'>
+                    <label class= "flex-1 text-white text-lg mb-3 whitespace-nowrap">Username :</label>
+                    <input 
+                        type="text" 
+                        value="{{ user.username|default_if_none:'-' }}" 
+                        readonly
+                        class="flex-2 w-full px-6 py-3 bg-slate-700 text-slate-400 rounded-xl focus:outline-none cursor-not-allowed">
+                </div>
+            </div>
+            <!-- Subject Field -->
+            <div class='flex items-center gap-4 mb-8'>
+                <label class="flex-1 text-white text-lg mb-3 whitespace-nowrap">Subject :</label>
+                {{ form.subject }}
+            </div>
+            <!-- Message Field -->
+            <div class='flex items-start gap-4 mb-8'>
+                <label class="flex-1 text-white text-lg mb-3 whitespace-nowrap">Message :</label>
+                {{ form.message }}
+            </div>
+
+            <div class="flex justify-between mt-8">
+                <a href="{% url 'detail_user_list' user_id=user.id %}" class="px-6 py-3 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-lg font-medium transition-colors cursor-pointer">
+                    Back
+                </a>
+
+                <button type="submit" class="px-6 py-3 bg-green-400 hover:bg-green-500 text-slate-900 rounded-lg font-medium transition-colors cursor-pointer">
+                    Send email to user
+                </button>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}

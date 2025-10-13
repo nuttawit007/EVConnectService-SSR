@@ -24,4 +24,6 @@ urlpatterns = [
     path('users/<int:user_id>/detail/', views.UserDetailView.as_view(), name='detail_user_list'),
     # ex: /staff/users/1/delete/
     path('users/<int:user_id>/delete/', views.UserDeleteView.as_view(), name='delete_user_list'),
+    # ex: /staff/users/1/send-email/
+    path('users/<int:user_id>/send-email/', views.SendEmailView.as_view(), name='send_user_email'),
 ]
