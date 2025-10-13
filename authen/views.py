@@ -74,3 +74,7 @@ class SignupView(View):
             "signup_form": signup_form, 
             "profile_form": profile_form
         })
+
+class UnauthorizedView(View):
+    def get(self, request, exception=None):
+        return render(request, '403.html', status=403)

@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from authen.views import UnauthorizedView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,3 +24,5 @@ urlpatterns = [
     path('staff/', include('staff.urls')),
     path('', include('authen.urls')),
 ]
+
+handler403 = UnauthorizedView.as_view()
