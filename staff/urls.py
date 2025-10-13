@@ -12,6 +12,8 @@ urlpatterns = [
     path('appointments/<int:appointment_id>/edit/', views.AppointmentEditView.as_view(), name='appointment_edit'),
     # ex: /staff/vehicles/
     path('vehicles/', views.VehicleListView.as_view(), name='vehicle_list'),
+    # ex: /staff/vehicles/1/delete/
+    path('vehicles/<int:vehicle_id>/delete/', views.VehicleDeleteView.as_view(), name='delete_vehicle_list'),
     # ex: /staff/reviews/
     path('reviews/', views.ReviewListView.as_view(), name='review_list'),
     # ex: /staff/reviews/1/

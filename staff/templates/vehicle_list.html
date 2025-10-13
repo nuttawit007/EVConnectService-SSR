@@ -3,9 +3,32 @@
 {% block content %}
 <main class="container mx-auto px-6 py-12">
     <!-- Page Title  -->
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold mb-2">Vehicles</h1>
-        <p class="text-slate-400 text-lg">Total {{ total_vehicles }} vehicles</p>
+    <div class="flex items-start justify-between mb-8">
+        <div>
+            <h1 class="text-4xl font-bold mb-2">Vehicles</h1>
+            <p class="text-slate-400 text-lg">Total {{ total_vehicles }} vehicles</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <form method="GET">
+            <div class="flex items-end gap-4">
+                <!-- Date Time Search -->
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">License plate</label>
+                    <input
+                        type="text"
+                        name="license_plate"
+                        value="{{ filter_license_plate|default:'' }}"
+                        placeholder="Search license plate..."
+                        class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-yellow-400 transition-colors w-64"
+                    >
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="px-6 py-3 bg-yellow-400 text-slate-900 rounded-lg cursor-pointer">Filter</button>
+                </div>
+            </div>
+        </form>
+    </div>
     </div>
 
     <!-- Vehicles Table  -->
@@ -18,6 +41,7 @@
                     <th class="text-left px-6 py-4 font-medium text-slate-300">License plate</th>
                     <th class="text-left px-6 py-4 font-medium text-slate-300">Brand</th>
                     <th class="text-left px-6 py-4 font-medium text-slate-300">Model</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +52,14 @@
                         <td class="px-6 py-5 text-white">{{ vehicle.license_plate }}</td>
                         <td class="px-6 py-5 text-white">{{ vehicle.brand }}</td>
                         <td class="px-6 py-5 text-white">{{ vehicle.model }}</td>
+                        <td class="px-6 py-5">
+                            <form method="POST" action="{% url 'delete_vehicle_list' vehicle_id=vehicle.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg font-medium transition-colors cursor-pointer">
+                                    delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>

@@ -147,11 +147,12 @@ class AppointmentEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class VehicleListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ['staff.access_vehicle_page']
     def get(self, request):
-        vehicles = (
-            Vehicle.objects
-            .select_related('user')
-            .order_by('id')
-        )
+        vehicles = Vehicle.objects.all().order_by('id')
+
+        filter_license_plate = request.GET.get('license_plate')
+        if filter_license_plate:
+            vehicles = vehicles.filter(license_plate__icontains=filter_license_plate)
+
         vehicle_rows = [
             {
                 'index': idx,
@@ -167,7 +168,18 @@ class VehicleListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'vehicle_list.html', {
             'total_vehicles': vehicles.count(),
             'vehicles': vehicle_rows,
+            'filter_license_plate': filter_license_plate,
         })
+
+class VehicleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['staff.access_vehicle_page', 'staff.delete_vehiclestaff']
+
+    def post(self, request, vehicle_id):
+        vehicle = Vehicle.objects.get(pk=vehicle_id)
+        license_plate = vehicle.license_plate
+        vehicle.delete()
+        messages.success(request, f"Vehicle (license plate: {license_plate}) deleted successfully.")
+        return redirect('vehicle_list')
 
 class ReviewListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ['staff.access_review_page', 'staff.view_review']
