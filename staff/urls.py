@@ -18,5 +18,10 @@ urlpatterns = [
     path('reviews/', views.ReviewListView.as_view(), name='review_list'),
     # ex: /staff/reviews/1/
     path('reviews/<int:review_id>/', views.ReviewDetailView.as_view(), name='review_detail'),
-
+    # ex: /staff/users/
+    path('users/', views.UserListView.as_view(), name='user_list'),
+    # ex: /staff/users/1/detail/
+    path('users/<int:user_id>/detail/', views.UserDetailView.as_view(), name='detail_user_list'),
+    # ex: /staff/users/1/delete/
+    path('users/<int:user_id>/delete/', views.UserDeleteView.as_view(), name='delete_user_list'),
 ]

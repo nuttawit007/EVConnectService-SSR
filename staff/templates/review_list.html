@@ -14,7 +14,7 @@
                 <!-- Score Filter -->
                 <div>
                     <label class="block text-sm text-slate-400 mb-2">Score</label>
-                    <select name="score" class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-yellow-400 transition-colors w-48 appearance-none cursor-pointer">
+                    <select name="score" class="px-6 py-2.5 bg-slate-700 border border-slate-600 rounded-full text-white focus:outline-none focus:border-yellow-400 transition-colors w-48 appearance-none cursor-pointer">
                         <option value="">All scores</option>
                         <option value="1" {% if filter_score == '1' %}selected{% endif %}>1</option>
                         <option value="2" {% if filter_score == '2' %}selected{% endif %}>2</option>
@@ -24,7 +24,7 @@
                     </select>
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="px-6 py-3 bg-yellow-400 text-slate-900 rounded-lg cursor-pointer">Filter</button>
+                    <button type="submit" class="px-6 py-3 bg-yellow-400 text-slate-900 rounded-full cursor-pointer">Filter</button>
                 </div>
             </div>
         </form>
@@ -35,8 +35,8 @@
         <table class="w-full">
             <thead>
                 <tr class="border-b border-slate-700 bg-slate-900">
-                    <th class="text-left px-6 py-4 font-medium text-slate-300">ID</th>
-                    <th class="text-left px-6 py-4 font-medium text-slate-300">License plate</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300">No</th>
+                    <th class="text-left px-6 py-4 font-medium text-slate-300 whitespace-nowrap">License plate</th>
                     <th class="text-left px-6 py-4 font-medium text-slate-300">Score</th>
                     <th class="text-left px-6 py-4 font-medium text-slate-300">Comment</th>
                     <th class="text-left px-6 py-4 font-medium text-slate-300">Actions</th>
@@ -46,7 +46,7 @@
                 {% for review in reviews %}
                     <tr class="border-b border-slate-700 hover:bg-slate-800/30 transition-colors">
                         <td class="px-6 py-5 text-white">{{ review.index }}</td>
-                        <td class="px-6 py-5 text-white">{{ review.license_plate }}</td>
+                        <td class="px-6 py-5 text-white whitespace-nowrap">{{ review.license_plate }}</td>
                         <td class="px-6 py-5 text-white">{{ review.score }}</td>
                         <td class="px-6 py-5 text-white">{{ review.comment }}</td>
                         <td class="px-6 py-5">

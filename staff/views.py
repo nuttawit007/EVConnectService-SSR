@@ -1,4 +1,5 @@
 import json
+import profile
 
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -19,7 +20,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         total_appointments = Appointment.objects.count()
         total_vehicles = Vehicle.objects.count()
-        total_users = User.objects.count()
+        total_users = User.objects.filter(groups__name='Client').exclude(is_superuser=True).count()
         # Appointments over time for chart
         appointment_dates = list(
             Appointment.objects.values_list('date', flat=True)
@@ -233,3 +234,57 @@ class ReviewDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'comment': review.comment or '-',
         }
         return render(request, 'review_detail.html', review_data)
+
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['staff.access_user_page', 'auth.view_user']
+
+    def get(self, request):
+        # only users in Django Group "Client"
+        users = User.objects.filter(groups__name='Client').exclude(is_superuser=True).order_by('id')
+
+        filter_username = request.GET.get('username')
+        if filter_username:
+            users = users.filter(username__icontains=filter_username)
+
+        user_rows = [
+            {
+                'index': idx,
+                'id': user.id,
+                'username': user.username,
+                'phone_number': user.profile.phone_number if hasattr(user, 'profile') else '-',
+                'email': user.email or '-',
+            }
+            for idx, user in enumerate(users, start=1)
+        ]
+
+        return render(request, 'user_list.html', {
+            'total_users': users.count(),
+            'users': user_rows,
+            'filter_username': filter_username,
+        })
+
+class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['staff.access_user_page', 'auth.view_user']
+
+    def get(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+
+        # get phone number from related Profile if available
+        profile = getattr(user, 'profile', None)
+        phone_number = getattr(profile, 'phone_number', '-') if profile is not None else '-'
+        print(phone_number)
+
+        return render(request, 'user_detail.html', {
+            'user': user,
+            'phone_number': phone_number,
+        })
+
+class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = ['staff.access_user_page', 'auth.delete_user']
+
+    def post(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+        username = user.username
+        user.delete()
+        messages.success(request, f"User (username: {username}) deleted successfully.")
+        return redirect('user_list')
