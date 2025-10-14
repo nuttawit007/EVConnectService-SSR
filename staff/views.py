@@ -185,7 +185,7 @@ class VehicleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect('vehicle_list')
 
 class ReviewListView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_review_page', 'staff.view_review']
+    permission_required = ['staff.access_review_page', 'staff.view_reviewstaff']
 
     def get(self, request):
         reviews = Review.objects.all().order_by('id')
@@ -214,7 +214,7 @@ class ReviewListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
 
 class ReviewDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_review_page', 'staff.view_review']
+    permission_required = ['staff.access_review_page', 'staff.view_reviewstaff']
     def get(self, request, review_id):
         review = Review.objects.get(pk=review_id)
         appointment = review.appointment
@@ -238,7 +238,7 @@ class ReviewDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, 'review_detail.html', review_data)
 
 class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_user_page', 'auth.view_user']
+    permission_required = ['auth.view_user']
 
     def get(self, request):
         # only users in Django Group "Client"
@@ -266,7 +266,7 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
 
 class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_user_page', 'auth.view_user']
+    permission_required = ['auth.view_user']
 
     def get(self, request, user_id):
         user = User.objects.get(pk=user_id)
@@ -282,7 +282,7 @@ class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
 
 class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_user_page', 'auth.delete_user']
+    permission_required = ['auth.delete_user']
 
     def post(self, request, user_id):
         user = User.objects.get(pk=user_id)
@@ -292,7 +292,7 @@ class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect('user_list')
 
 class SendEmailView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['staff.access_user_page', 'auth.view_user']
+    permission_required = ['auth.view_user']
 
     def get(self, request, user_id):
         user = User.objects.get(pk=user_id)
